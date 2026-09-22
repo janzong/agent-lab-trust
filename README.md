@@ -25,6 +25,14 @@ It prints one JSON block with the repo commit, both timezone test results,
 `report_hash`, and deletion `audit_hash`. To report a reproduction, use the
 “Reproduction report” issue template (fields only; no logs or credentials).
 
+## Reproduce with Docker
+
+```bash
+docker run --rm ghcr.io/janzong/agent-lab-trust:rc2
+```
+
+No Python setup required; the image runs the same one-command reproduction.
+
 ## Run
 
 ```bash
