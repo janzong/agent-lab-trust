@@ -1,7 +1,7 @@
 [project]
 name = "agent-lab-trust"
 version = "0.1.0"
-description = "Minimal read-only method package for synthetic GenMentor run artifacts"
+description = "Local-first, read-only agent run validator with hashed reports and a synthetic deletion proof"
 requires-python = ">=3.11"
 dependencies = ["pydantic>=2.7,<3"]
 

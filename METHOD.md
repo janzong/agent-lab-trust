@@ -2,15 +2,22 @@
 
 ## Scope
 
-Read-only normalization of synthetic GenMentor archive artifacts. This package is deliberately small and runs without network access.
+Local-first validation of agent run artifacts, hashed run reports, and a
+synthetic deletion proof. The package is deliberately small and runs without
+network access.
 
 ## Invariants
 
-- source artifacts are read-only;
-- malformed archives raise explicit parse errors;
-- no prompt, response, credential, or private run is included;
-- synthetic fixtures are the only data shipped here.
+- run directories are read-only;
+- a run is valid only when a non-empty `output/structured.json` (or
+  `results/structured.json`) exists;
+- missing or malformed artifacts produce explicit failure codes, never silent
+  success;
+- `report` is canonical and reproducible through `report_hash`;
+- `deletion-proof` uses synthetic records only and is idempotent;
+- no prompt, response, credential, or private run is included.
 
 ## Limitations
 
-Coverage, learner evidence, and model quality are outside this package.
+Agent quality, learner evidence, and model comparison are outside this package.
+The deletion proof is a process check, not a compliance certification.
