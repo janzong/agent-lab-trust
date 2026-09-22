@@ -1,0 +1,8 @@
+{
+  "project": "gen-mentor",
+  "run_id": "replay-sample",
+  "mode": "replay",
+  "success": true,
+  "fixture_calls": 4,
+  "collected_at": "2026-09-20T14:40:07+08:00"
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "baseline": {
+    "quiz_answered": 4,
+    "quiz_correct": 4
+  },
+  "probes": [
+    {
+      "id": "retention-s0-24h",
+      "kind": "retention",
+      "condition": "closed_book",
+      "window_hours": 24,
+      "session_index": 0,
+      "assigned": 4,
+      "answered": 4,
+      "correct": 3
+    },
+    {
+      "id": "transfer-s0-24h",
+      "kind": "transfer",
+      "condition": "closed_book",
+      "window_hours": 24,
+      "session_index": 0,
+      "assigned": 4,
+      "answered": 4,
+      "correct": 2
+    },
+    {
+      "id": "open-book-s0-24h",
+      "kind": "retention",
+      "condition": "open_book",
+      "window_hours": 24,
+      "session_index": 0,
+      "assigned": 4,
+      "answered": 4,
+      "correct": 4
+    }
+  ],
+  "integrity": {
+    "source_archive_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "probe_bank_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "archive_unchanged": true,
+    "leak_scan_passed": true,
+    "scoring_recomputable": true,
+    "window_timestamps_verified": true
+  }
+}
