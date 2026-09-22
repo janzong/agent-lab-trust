@@ -1,5 +1,7 @@
 # Agent Lab Trust
 
+[![reproduce](https://github.com/janzong/agent-lab-trust/actions/workflows/reproduce.yml/badge.svg)](https://github.com/janzong/agent-lab-trust/actions/workflows/reproduce.yml)
+
 Local-first, read-only agent run validator.
 
 It does three things:
@@ -12,6 +14,16 @@ It does three things:
 
 No network calls at test time. No private runs, bundles, credentials, prompts,
 or model responses.
+
+## Reproduce in one command
+
+```bash
+bash scripts/reproduce.sh
+```
+
+It prints one JSON block with the repo commit, both timezone test results,
+`report_hash`, and deletion `audit_hash`. To report a reproduction, use the
+“Reproduction report” issue template (fields only; no logs or credentials).
 
 ## Run
 
