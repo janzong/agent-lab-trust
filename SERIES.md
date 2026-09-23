@@ -13,7 +13,7 @@ Underlying method package: <https://github.com/janzong/agent-lab-method>.
 ## Reproduce
 
 ```bash
-docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:9f9428557933004514ec6b54988fc3668071e1b73f87e0c3ac2e04ba4536f3a0
+docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:2e178e63fff30e70ac68501cb17e5316097875932d1d7085e669ce4f8d5a105f
 ```
 
 or `bash scripts/reproduce.sh`.
