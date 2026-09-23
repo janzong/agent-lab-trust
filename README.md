@@ -28,10 +28,12 @@ It prints one JSON block with the repo commit, both timezone test results,
 ## Reproduce with Docker
 
 ```bash
-docker run --rm ghcr.io/janzong/agent-lab-trust:rc2
+docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:9f9428557933004514ec6b54988fc3668071e1b73f87e0c3ac2e04ba4536f3a0
 ```
 
-No Python setup required; the image runs the same one-command reproduction.
+No Python setup required; the image runs the same one-command reproduction. The
+`rc2` tag points to the same image, but the digest above is pinned so a local
+registry cache cannot serve an older build.
 
 ## Run
 
