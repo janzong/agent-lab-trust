@@ -1,5 +1,7 @@
 # Agent Lab Trust
 
+Part of the **agent trust series**: [SERIES.md](SERIES.md) — write it down → test it → govern it.
+
 [![reproduce](https://github.com/janzong/agent-lab-trust/actions/workflows/reproduce.yml/badge.svg)](https://github.com/janzong/agent-lab-trust/actions/workflows/reproduce.yml)
 
 Local-first, read-only agent run validator.
