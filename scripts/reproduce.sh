@@ -19,7 +19,7 @@ shanghai="$(TZ=Asia/Shanghai "$PYTHON_BIN" -m pytest -q 2>&1 | tail -1)"
 validate="$("$PYTHON_BIN" -m agent_lab_trust.cli validate tests/fixtures/gen-mentor)"
 report="$("$PYTHON_BIN" -m agent_lab_trust.cli report tests/fixtures/gen-mentor)"
 deletion="$("$PYTHON_BIN" -m agent_lab_trust.cli deletion-proof)"
-commit="$(git rev-parse HEAD 2>/dev/null || echo unknown)"
+commit="$(git rev-parse HEAD 2>/dev/null || echo "${AGENT_LAB_COMMIT:-unknown}")"
 
 COMMIT="$commit" UTC="$utc" SHANGHAI="$shanghai" VALIDATE="$validate" REPORT="$report" DELETION="$deletion" \
 "$PYTHON_BIN" - <<'PY'

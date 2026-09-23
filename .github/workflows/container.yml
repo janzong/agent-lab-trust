@@ -23,6 +23,8 @@ jobs:
         with:
           context: .
           push: true
+          build-args: |
+            GIT_COMMIT=${{ github.sha }}
           tags: |
             ghcr.io/janzong/agent-lab-trust:rc2
             ghcr.io/janzong/agent-lab-trust:latest
