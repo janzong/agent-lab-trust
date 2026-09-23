@@ -58,6 +58,7 @@ Expected:
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
+| `audit` | `passed: true`, `audit_hash` `c9be0b8b8d2e502c98c15509861d6dc6ae4c02b8cc2d3c7ceb7a179209106a9a` |
 
 ## Governance audit
 
