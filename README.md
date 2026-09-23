@@ -30,7 +30,7 @@ It prints one JSON block with the repo commit, both timezone test results,
 ## Reproduce with Docker
 
 ```bash
-docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:0c65075920b991b6f5fc822b8e3b7ab2ca5c69850c2b3ef16f2cc78a0241ddb6
+docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:a5a170b2b2801bd61ff9c189c8f391323cfd8e8ca4e236f049abeaf85e97a28f
 ```
 
 No Python setup required; the image runs the same one-command reproduction. The
