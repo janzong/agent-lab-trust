@@ -54,7 +54,7 @@ Expected:
 
 | Check | Expected |
 |---|---|
-| tests | 13 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
+| tests | 22 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
@@ -73,8 +73,7 @@ and forbidden markers. It prints a canonical `audit_hash`. `deletion-proof
 
 ## Seeking 3 independent reproductions
 
-This is `v0.1.0-rc2`. I am looking for **3 independent reproductions by
-non-authors**. Run the commands above and report only: machine/Python, test
+This is the current main (policy pinning included). For the pre-audit `v0.1.0-rc2` snapshot, use the release tag; the issue pins both targets. I am looking for **3 independent reproductions by non-authors**. Run the commands above and report only: machine/Python, test
 count, `report_hash`, `audit_hash`, and whether the artifact SHA matched. See
 the issue tracker for the current request.
 
