@@ -27,11 +27,40 @@ def load_policy(path: Path) -> dict[str, Any]:
     markers = payload.get("forbidden_markers", [])
     if not isinstance(markers, list) or any(not isinstance(marker, str) for marker in markers):
         raise PolicyError("forbidden_markers must be a list of strings")
+    required = payload.get("required_artifacts")
+    if required is not None:
+        if not isinstance(required, list) or any(not isinstance(item, str) or not item for item in required):
+            raise PolicyError("required_artifacts must be a list of non-empty strings")
+    mode = payload.get("required_artifacts_mode", "all")
+    if mode not in ("all", "any"):
+        raise PolicyError("required_artifacts_mode must be 'all' or 'any'")
     return payload
 
 
 def _canonical(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _required_artifacts(policy: Mapping[str, Any]) -> tuple[list[str], str]:
+    if "required_artifacts" in policy:
+        return list(policy["required_artifacts"]), str(policy.get("required_artifacts_mode", "all"))
+    if policy.get("require_structured_artifact", True):
+        return ["output/structured.json", "results/structured.json"], "any"
+    return [], "all"
+
+
+def _artifact_check(run_dir: Path, artifacts: list[str], mode: str) -> tuple[bool, list[str], list[str]]:
+    present: list[str] = []
+    missing: list[str] = []
+    for relative in artifacts:
+        candidate = run_dir / relative
+        if candidate.is_file() and candidate.stat().st_size > 0:
+            present.append(relative)
+        else:
+            missing.append(relative)
+    if mode == "any":
+        return bool(present), present, missing
+    return not missing, present, missing
 
 
 def _marker_hits(root: Path, markers: list[str]) -> list[dict[str, Any]]:
@@ -57,11 +86,14 @@ def audit_root(root: Path, policy: Mapping[str, Any]) -> dict[str, Any]:
     root = Path(root)
     runs = GenMentorAdapter().discover(root)
     findings: list[dict[str, Any]] = []
+    artifacts, artifact_mode = _required_artifacts(policy)
 
     for run in runs:
-        if policy.get("require_structured_artifact", True) and not run.success:
+        run_dir = root / run.source_dir
+        artifact_ok, present, missing = _artifact_check(run_dir, artifacts, artifact_mode)
+        if not artifact_ok:
             findings.append(
-                {"code": "missing_artifact", "run_id": run.run_id, "detail": run.error or "not valid"}
+                {"code": "missing_artifact", "run_id": run.run_id, "missing": missing, "present": present}
             )
         cost = run.metrics.cost_usd
         max_cost = policy.get("max_cost_usd")
@@ -84,6 +116,8 @@ def audit_root(root: Path, policy: Mapping[str, Any]) -> dict[str, Any]:
         "findings": findings,
         "passed": not findings,
         "policy_keys": sorted(policy),
+        "required_artifacts": artifacts,
+        "required_artifacts_mode": artifact_mode,
     }
     result["audit_hash"] = hashlib.sha256(_canonical(result).encode("utf-8")).hexdigest()
     return result

@@ -66,9 +66,9 @@ agent-lab-trust audit tests/fixtures/gen-mentor --policy policy.example.json
 ```
 
 The audit checks each run against a JSON policy: per-run cost and call caps,
-structured-artifact presence, and forbidden markers. It prints a canonical
-`audit_hash`. `deletion-proof --output <path>` writes the deletion proof used in
-the same policy flow.
+artifact contracts (`required_artifacts` with `required_artifacts_mode: all|any`),
+and forbidden markers. It prints a canonical `audit_hash`. `deletion-proof
+--output <path>` writes the deletion proof used in the same policy flow.
 
 ## Seeking 3 independent reproductions
 
