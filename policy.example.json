@@ -1,0 +1,6 @@
+{
+  "max_cost_usd": 0.60,
+  "max_calls": 320,
+  "require_structured_artifact": true,
+  "forbidden_markers": ["sk-", "BEGIN PRIVATE KEY", "password="]
+}

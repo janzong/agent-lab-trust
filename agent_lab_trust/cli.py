@@ -10,6 +10,7 @@ from pathlib import Path
 
 from agent_lab_trust.adapters.gen_mentor import GenMentorAdapter
 from agent_lab_trust.deletion import run_deletion_proof
+from agent_lab_trust.governance import audit_root, load_policy
 
 
 def _classify_failure(success: bool, error: str | None) -> str:
@@ -54,7 +55,11 @@ def main(argv: list[str] | None = None) -> int:
     validate.add_argument("root", type=Path, help="directory containing run subdirectories")
     report = subcommands.add_parser("report", help="aggregate local runs into a hashed report")
     report.add_argument("root", type=Path, help="directory containing run subdirectories")
-    subcommands.add_parser("deletion-proof", help="run the synthetic-only deletion proof")
+    deletion = subcommands.add_parser("deletion-proof", help="run the synthetic-only deletion proof")
+    deletion.add_argument("--output", type=Path, default=None, help="write the proof JSON to this path")
+    audit = subcommands.add_parser("audit", help="audit runs against a governance policy")
+    audit.add_argument("root", type=Path, help="directory containing run subdirectories")
+    audit.add_argument("--policy", type=Path, required=True, help="path to a JSON policy file")
     args = parser.parse_args(argv)
 
     if args.command in {"validate", "report"}:
@@ -93,8 +98,17 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "deletion-proof":
         result = run_deletion_proof()
-        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        payload = json.dumps(result, ensure_ascii=False, sort_keys=True)
+        if args.output is not None:
+            args.output.write_text(payload + "\n", encoding="utf-8")
+        print(payload)
         return 0 if result["clean"] else 1
+
+    if args.command == "audit":
+        policy = load_policy(args.policy)
+        result = audit_root(args.root, policy)
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        return 0 if result["passed"] else 1
 
     return 2
 
