@@ -1,6 +1,6 @@
 # Agent Lab Trust
 
-Part of the **agent trust series**: [SERIES.md](SERIES.md) — write it down → test it → govern it.
+Part of the **agent trust series**: [SERIES.md](SERIES.md) — write it down → test it → govern it. Write-ups: [negative result](https://dev.to/janzong/we-ran-2-vs-4-agents-six-times-four-agents-cost-21x-and-did-not-improve-success-k98) · [governance audit](https://dev.to/janzong/your-agent-run-passed-can-you-prove-it-was-allowed-3d5i).
 
 [![reproduce](https://github.com/janzong/agent-lab-trust/actions/workflows/reproduce.yml/badge.svg)](https://github.com/janzong/agent-lab-trust/actions/workflows/reproduce.yml)
 
