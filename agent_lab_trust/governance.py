@@ -116,6 +116,8 @@ def audit_root(root: Path, policy: Mapping[str, Any]) -> dict[str, Any]:
         "findings": findings,
         "passed": not findings,
         "policy_keys": sorted(policy),
+        "policy": json.loads(_canonical(policy)),
+        "policy_sha256": hashlib.sha256(_canonical(policy).encode("utf-8")).hexdigest(),
         "required_artifacts": artifacts,
         "required_artifacts_mode": artifact_mode,
     }

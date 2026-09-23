@@ -95,3 +95,14 @@ def test_audit_flags_missing_policy_declared_artifact(tmp_path: Path) -> None:
     result = audit_root(tmp_path, policy)
     assert result["passed"] is False
     assert any("missing.json" in finding.get("missing", []) for finding in result["findings"])
+
+
+def test_audit_binds_full_policy_content(tmp_path: Path) -> None:
+    _make_run(tmp_path, "clean-run")
+    policy_a = {**POLICY, "max_cost_usd": 0.60}
+    policy_b = {**POLICY, "max_cost_usd": 100.0}
+    result_a = audit_root(tmp_path, policy_a)
+    result_b = audit_root(tmp_path, policy_b)
+    assert result_a["audit_hash"] != result_b["audit_hash"]
+    assert result_a["policy"]["max_cost_usd"] == 0.60
+    assert len(result_a["policy_sha256"]) == 64

@@ -60,6 +60,7 @@ def main(argv: list[str] | None = None) -> int:
     audit = subcommands.add_parser("audit", help="audit runs against a governance policy")
     audit.add_argument("root", type=Path, help="directory containing run subdirectories")
     audit.add_argument("--policy", type=Path, required=True, help="path to a JSON policy file")
+    audit.add_argument("--output", type=Path, default=None, help="write the audit result JSON to this path")
     args = parser.parse_args(argv)
 
     if args.command in {"validate", "report"}:
@@ -107,7 +108,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "audit":
         policy = load_policy(args.policy)
         result = audit_root(args.root, policy)
-        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        payload = json.dumps(result, ensure_ascii=False, sort_keys=True)
+        if args.output is not None:
+            args.output.write_text(payload + "\n", encoding="utf-8")
+        print(payload)
         return 0 if result["passed"] else 1
 
     return 2
