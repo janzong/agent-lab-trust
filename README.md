@@ -41,8 +41,9 @@ registry cache cannot serve an older build.
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -i https://pypi.tuna.tsinghua.edu.cn/simple \
-  'pydantic>=2.7,<3' 'pytest>=8,<9'
+.venv/bin/pip install 'pydantic>=2.7,<3' 'pytest>=8,<9'
+# Optional: if PyPI is slow on your network, add a mirror, e.g.
+# .venv/bin/pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 'pydantic>=2.7,<3' 'pytest>=8,<9'
 
 TZ=UTC .venv/bin/python -m pytest -q
 .venv/bin/python -m agent_lab_trust.cli validate tests/fixtures/gen-mentor
