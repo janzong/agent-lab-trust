@@ -33,9 +33,10 @@ It prints one JSON block with the repo commit, both timezone test results,
 docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:a5a170b2b2801bd61ff9c189c8f391323cfd8e8ca4e236f049abeaf85e97a28f
 ```
 
-No Python setup required; the image runs the same one-command reproduction. The
-`rc2` tag points to the same image, but the digest above is pinned so a local
-registry cache cannot serve an older build.
+No Python setup required; the image runs the same one-command reproduction. The digest above is
+pinned so a local registry cache cannot serve a different build. The `rc2` **tag** is *not* the
+same build: it still resolves to the pre-audit snapshot (13 tests, no governance audit) — use the
+pinned digest above for the current build.
 
 ## Run
 
