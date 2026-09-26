@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "exported_at": 1789881607000,
+  "active_goal_id": "g_test",
+  "goals": [
+    {
+      "id": "g_test",
+      "created_at": 1789622407000,
+      "original_goal": "Learn Pandas fundamentals",
+      "learning_goal": "Learn Pandas fundamentals",
+      "learner_information": "Synthetic learner",
+      "skill_requirements": [
+        {"name": "Python Fundamentals", "required_level": "beginner"},
+        {"name": "Pandas Practice", "required_level": "intermediate"}
+      ],
+      "skill_gaps": [],
+      "learner_profile": {},
+      "learning_path": [
+        {
+          "title": "Load and inspect DataFrames",
+          "if_learned": true,
+          "associated_skills": ["Python Fundamentals", "Pandas Practice"]
+        },
+        {
+          "title": "Clean missing values",
+          "if_learned": false,
+          "associated_skills": ["Pandas Practice"]
+        }
+      ],
+      "sessions": {
+        "g_test:0": {
+          "opened_at": [1789708807000],
+          "completed_at": 1789708867000,
+          "document": {"structure": {"title": "Load and inspect DataFrames"}, "markdown": "# Synthetic reading"},
+          "quiz": {"single_choice_questions": [], "multiple_choice_questions": [], "true_false_questions": [], "short_answer_questions": []},
+          "quiz_results": {"answered": 2, "correct": 2, "wrong_questions": [], "verdicts": {}, "submittedAt": 1789708867000}
+        }
+      },
+      "mastery_history": [],
+      "tutor": []
+    }
+  ]
+}

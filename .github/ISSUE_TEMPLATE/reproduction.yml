@@ -1,0 +1,45 @@
+name: Reproduction report
+description: Report an independent reproduction of agent-lab-trust
+title: "[reproduction] "
+labels: ["reproduction"]
+body:
+  - type: input
+    id: machine
+    attributes:
+      label: Machine / Python
+      description: OS, Python version, timezone
+    validations:
+      required: true
+  - type: input
+    id: tests
+    attributes:
+      label: Tests
+      description: "e.g. 13 passed under TZ=UTC and TZ=Asia/Shanghai"
+    validations:
+      required: true
+  - type: input
+    id: report_hash
+    attributes:
+      label: report_hash
+      description: Expected a841b192981fd7e7
+    validations:
+      required: true
+  - type: input
+    id: audit_hash
+    attributes:
+      label: deletion audit_hash
+      description: Expected 4f0193abbd49a0f9
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: repo commit / artifact SHA
+      description: git rev-parse HEAD, or artifact SHA-256
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Mismatch or notes
+      description: Do not paste run contents, logs, credentials, or private paths.

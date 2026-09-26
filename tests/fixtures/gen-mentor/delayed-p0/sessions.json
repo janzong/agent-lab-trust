@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "sessions": {
+    "0": {
+      "completed_at_ms": 1789600000000,
+      "document": "Synthetic module about orbital mechanics, cargo manifests, and inventory reconciliation."
+    },
+    "1": {
+      "completed_at_ms": 1789603600000,
+      "document": "Synthetic module about ocean currents, shipping lanes, and weather routing."
+    }
+  }
+}

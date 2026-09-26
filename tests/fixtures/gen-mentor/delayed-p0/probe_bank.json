@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "baseline": {
+    "quiz_answered": 4,
+    "quiz_correct": 3
+  },
+  "items": [
+    {
+      "id": "retention-0",
+      "kind": "retention",
+      "condition": "closed_book",
+      "window_hours": 24,
+      "session_index": 0,
+      "question": "Which command creates an isolated virtual environment?",
+      "choices": ["python -m venv", "python -m http", "python -m json"],
+      "correct_index": 0,
+      "answer_text": "python -m venv"
+    },
+    {
+      "id": "transfer-1",
+      "kind": "transfer",
+      "condition": "open_book",
+      "window_hours": 24,
+      "session_index": 1,
+      "question": "Which clause groups rows before aggregation?",
+      "choices": ["WHERE", "GROUP BY", "ORDER BY"],
+      "correct_index": 1,
+      "answer_text": "GROUP BY"
+    }
+  ]
+}
