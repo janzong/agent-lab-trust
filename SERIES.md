@@ -30,6 +30,9 @@ Expected on current main: `22 passed` under both `TZ=UTC` and
 Three non-author reproductions are complete; the gate issue is closed as completed:
 <https://github.com/janzong/agent-lab-trust/issues/1>.
 
+Current release: **v0.1.0** —
+<https://github.com/janzong/agent-lab-trust/releases/tag/v0.1.0>.
+
 ## Non-claims
 
 Synthetic evidence only. No real learner data, no RMAS integration, and no cross-task transfer claim.

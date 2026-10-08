@@ -79,6 +79,9 @@ Three independent non-author reproductions are complete, and the reproduction
 issue is closed as completed:
 <https://github.com/janzong/agent-lab-trust/issues/1>.
 
+v0.1.0 is published:
+<https://github.com/janzong/agent-lab-trust/releases/tag/v0.1.0>.
+
 Current main requires Python 3.11 or newer. The pre-audit `v0.1.0-rc2`
 snapshot remains available from the release tag; use the pinned Docker digest
 above for the current policy-audit build.
