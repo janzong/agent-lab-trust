@@ -73,11 +73,15 @@ artifact contracts (`required_artifacts` with `required_artifacts_mode: all|any`
 and forbidden markers. It prints a canonical `audit_hash`. `deletion-proof
 --output <path>` writes the deletion proof used in the same policy flow.
 
-## Seeking 3 independent reproductions
+## Reproduction status
 
-This is the current main (policy pinning included). For the pre-audit `v0.1.0-rc2` snapshot, use the release tag; the issue pins both targets. I am looking for **3 independent reproductions by non-authors**. Run the commands above and report only: machine/Python, test
-count, `report_hash`, `audit_hash`, and whether the artifact SHA matched. See
-the issue tracker for the current request.
+Three independent non-author reproductions are complete, and the reproduction
+issue is closed as completed:
+<https://github.com/janzong/agent-lab-trust/issues/1>.
+
+Current main requires Python 3.11 or newer. The pre-audit `v0.1.0-rc2`
+snapshot remains available from the release tag; use the pinned Docker digest
+above for the current policy-audit build.
 
 ## Limits
 

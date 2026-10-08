@@ -18,11 +18,17 @@ docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:a5a170b2b2801bd61ff9c189c
 
 or `bash scripts/reproduce.sh`.
 
-Expected: `13 passed` under both `TZ=UTC` and `TZ=Asia/Shanghai`, `report_hash` `a841b192981fd7e7`, deletion `audit_hash` `4f0193abbd49a0f9`.
+Expected on current main: `22 passed` under both `TZ=UTC` and
+`TZ=Asia/Shanghai`, `report_hash` `a841b192981fd7e7`, deletion `audit_hash`
+`4f0193abbd49a0f9`, governance `audit_hash`
+`b304f294834a5901101d45fb98547c233d90e16c2f7cb5b965ce16641b1acbd3`, and
+`policy_sha256`
+`cda4f1bb845433e83ffc7b6b5f4af210c84973e4ebf277c8757fd61a12427160`.
 
 ## Independent reproductions
 
-The trust layer is looking for 3 non-author reproductions: <https://github.com/janzong/agent-lab-trust/issues/1>.
+Three non-author reproductions are complete; the gate issue is closed as completed:
+<https://github.com/janzong/agent-lab-trust/issues/1>.
 
 ## Non-claims
 
