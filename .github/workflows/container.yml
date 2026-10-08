@@ -26,5 +26,5 @@ jobs:
           build-args: |
             GIT_COMMIT=${{ github.sha }}
           tags: |
-            ghcr.io/janzong/agent-lab-trust:rc2
             ghcr.io/janzong/agent-lab-trust:latest
+            ghcr.io/janzong/agent-lab-trust:${{ github.ref_name }}
