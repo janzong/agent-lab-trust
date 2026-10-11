@@ -36,3 +36,7 @@ Current release: **v0.1.0** —
 ## Non-claims
 
 Synthetic evidence only. No real learner data, no RMAS integration, and no cross-task transfer claim.
+
+## Measurement semantics
+
+- [`docs/validity-states.md`](docs/validity-states.md) — the three validity states (valid / invalid / unknown-or-unattributable), the absent-zero rule, a sanitized incident, and the billing-state mapping. 中文对照：[`docs/validity-states.zh-CN.md`](docs/validity-states.zh-CN.md)。
