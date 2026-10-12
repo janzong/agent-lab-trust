@@ -63,6 +63,36 @@ The same triad appears independently in billing semantics:
 The shared failure mode is identical: one field carrying both a workflow
 decision and a measurement silently deletes the third state.
 
+## Measurement-window validity
+
+A measurement can execute successfully and still be invalid as evidence: it may
+run before the object has reached its final state. We call this a
+**window-invalid** measurement.
+
+The sanitized example comes from automated report grading. A quality grader
+inspected only the first six thousand characters of each report, while
+references and finalizer output were appended later in the document. The
+grading code executed, returned scores, and looked perfectly valid — but it had
+measured a prefix, not the artifact. Downstream consumers saw confident grades
+for content the grader had never read.
+
+Rule:
+
+> A result may be marked valid only when measured on the final object. If the
+> object is still being written, truncated by an implicit limit, or assembled
+> after the measurement input was captured, the state is
+> unknown-with-open-window, not valid.
+
+Practical guards:
+
+1. Pass an explicit content hash or final artifact id to the grader, not a
+   live mutable buffer.
+2. Record the measured byte range when a limit exists; surface the percentage
+   covered.
+3. Treat post-measurement writes as automatic invalidation events.
+4. Prefer failing closed on "object not finalized" over grading a prefix
+   silently.
+
 ## Implementation guidance
 
 1. Never derive a usage count from a workflow-status field.
@@ -70,3 +100,5 @@ decision and a measurement silently deletes the third state.
 3. Distinguish `no events observed` from `event stream not present`.
 4. Propagate unknown through aggregation; do not coerce it to zero.
 5. Write the failing test first for the absent case before fixing the ledger.
+6. Grade final artifacts only; never grade a prefix while the object is still
+   being written.
