@@ -64,6 +64,29 @@ Expected:
 
 ## Governance audit
 
+### Batch contract
+
+The optional `batch_contract` section lets you audit per-run quality metrics
+against declared thresholds. Metrics are read from a JSON file inside each run
+directory; fields are addressed by dotted path.
+
+```json
+"batch_contract": {
+  "metrics_file": "output/structured.json",
+  "metrics": {
+    "metrics.citation_reconciliation": {"min": 0.5},
+    "metrics.dirty_entries": {"max": 4}
+  }
+}
+```
+
+**Contract evolution**: when you add a new metric field, give it a default
+value in your producer so old runs still parse. A missing or non-numeric field
+emits `batch_metric_unknown` (fail-closed), not zero — per the
+[validity-states rule](docs/validity-states.md#the-absent-zero-rule). If a
+metric only exists for new runs, split it into a separate metrics file or
+version the file name rather than breaking the contract for old runs.
+
 ```bash
 agent-lab-trust audit tests/fixtures/gen-mentor --policy policy.example.json
 ```
