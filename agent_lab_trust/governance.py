@@ -34,6 +34,23 @@ def load_policy(path: Path) -> dict[str, Any]:
     mode = payload.get("required_artifacts_mode", "all")
     if mode not in ("all", "any"):
         raise PolicyError("required_artifacts_mode must be 'all' or 'any'")
+    batch_contract = payload.get("batch_contract")
+    if batch_contract is not None:
+        if not isinstance(batch_contract, dict):
+            raise PolicyError("batch_contract must be an object")
+        if not isinstance(batch_contract.get("metrics_file"), str) or not batch_contract["metrics_file"]:
+            raise PolicyError("batch_contract.metrics_file must be a non-empty string")
+        metrics = batch_contract.get("metrics")
+        if not isinstance(metrics, dict) or not metrics:
+            raise PolicyError("batch_contract.metrics must be a non-empty object")
+        for name, rule in metrics.items():
+            if not isinstance(name, str) or not name:
+                raise PolicyError("batch_contract.metrics keys must be non-empty strings")
+            if not isinstance(rule, dict):
+                raise PolicyError(f"batch_contract.metrics.{name} must be an object")
+            for bound in ("min", "max"):
+                if bound in rule and not isinstance(rule[bound], (int, float)):
+                    raise PolicyError(f"batch_contract.metrics.{name}.{bound} must be numeric")
     return payload
 
 
@@ -82,6 +99,63 @@ def _marker_hits(root: Path, markers: list[str]) -> list[dict[str, Any]]:
     return hits
 
 
+def _resolve_dotted(data: Any, path: str) -> tuple[bool, Any]:
+    value = data
+    for part in path.split("."):
+        if not isinstance(value, dict) or part not in value:
+            return False, None
+        value = value[part]
+    return True, value
+
+
+def _batch_contract_check(
+    run_dir: Path,
+    contract: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    metrics_file = run_dir / str(contract["metrics_file"])
+    findings: list[dict[str, Any]] = []
+    if not metrics_file.is_file():
+        return [
+            {
+                "code": "batch_metric_unknown",
+                "path": str(metrics_file.relative_to(run_dir)),
+                "reason": "metrics file missing",
+            }
+        ]
+    try:
+        data = json.loads(metrics_file.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return [
+            {
+                "code": "batch_metric_unknown",
+                "path": str(metrics_file.relative_to(run_dir)),
+                "reason": "metrics file unreadable",
+            }
+        ]
+    for name, rule in contract.get("metrics", {}).items():
+        found, value = _resolve_dotted(data, name)
+        if not found or not isinstance(value, (int, float)):
+            findings.append(
+                {
+                    "code": "batch_metric_unknown",
+                    "metric": name,
+                    "reason": "field missing or non-numeric",
+                }
+            )
+            continue
+        minimum = rule.get("min")
+        maximum = rule.get("max")
+        if minimum is not None and value < float(minimum):
+            findings.append(
+                {"code": "batch_metric_violation", "metric": name, "value": value, "min": minimum}
+            )
+        if maximum is not None and value > float(maximum):
+            findings.append(
+                {"code": "batch_metric_violation", "metric": name, "value": value, "max": maximum}
+            )
+    return findings
+
+
 def audit_root(root: Path, policy: Mapping[str, Any]) -> dict[str, Any]:
     root = Path(root)
     runs = GenMentorAdapter().discover(root)
@@ -90,6 +164,9 @@ def audit_root(root: Path, policy: Mapping[str, Any]) -> dict[str, Any]:
 
     for run in runs:
         run_dir = root / run.source_dir
+        batch_contract = policy.get("batch_contract")
+        if batch_contract is not None:
+            findings.extend(_batch_contract_check(run_dir, batch_contract))
         artifact_ok, present, missing = _artifact_check(run_dir, artifacts, artifact_mode)
         if not artifact_ok:
             findings.append(

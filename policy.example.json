@@ -3,5 +3,13 @@
   "max_calls": 320,
   "required_artifacts": ["output/structured.json", "results/structured.json"],
   "required_artifacts_mode": "any",
-  "forbidden_markers": ["sk-", "BEGIN PRIVATE KEY", "password="]
+  "forbidden_markers": ["sk-", "BEGIN PRIVATE KEY", "password="],
+  "batch_contract": {
+    "metrics_file": "output/structured.json",
+    "metrics": {
+      "metrics.citation_reconciliation": {"min": 0.5},
+      "metrics.dirty_entries": {"max": 4},
+      "metrics.method_honesty": {"min": 0.95}
+    }
+  }
 }

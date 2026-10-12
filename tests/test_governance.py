@@ -2,7 +2,7 @@ import json
 import shutil
 from pathlib import Path
 
-from agent_lab_trust.governance import audit_root, load_policy
+from agent_lab_trust.governance import audit_root, load_policy, PolicyError
 
 
 FIXTURES = Path(__file__).parent / "fixtures" / "gen-mentor" / "replay-sample"
@@ -106,3 +106,80 @@ def test_audit_binds_full_policy_content(tmp_path: Path) -> None:
     assert result_a["audit_hash"] != result_b["audit_hash"]
     assert result_a["policy"]["max_cost_usd"] == 0.60
     assert len(result_a["policy_sha256"]) == 64
+
+
+def test_policy_rejects_invalid_batch_contract() -> None:
+    import json
+    import tempfile
+    import pytest
+
+    for bad in [
+        {"batch_contract": []},
+        {"batch_contract": {"metrics_file": ""}},
+        {"batch_contract": {"metrics_file": "a.json", "metrics": {}}},
+        {"batch_contract": {"metrics_file": "a.json", "metrics": {"x": "not-object"}}},
+        {"batch_contract": {"metrics_file": "a.json", "metrics": {"x": {"min": "bad"}}}},
+    ]:
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as handle:
+            json.dump(bad, handle)
+            policy_path = Path(handle.name)
+        try:
+            with pytest.raises(PolicyError):
+                load_policy(policy_path)
+        finally:
+            policy_path.unlink(missing_ok=True)
+
+
+def test_batch_contract_passes_when_metrics_meet_thresholds(tmp_path: Path) -> None:
+    run_dir = tmp_path / "run-a"
+    run_dir.mkdir()
+    (run_dir / "archive.json").write_text(
+        json.dumps({"goals": [{"id": "g1", "title": "T"}], "active_goal_id": "g1"})
+    )
+    output_dir = run_dir / "output"
+    output_dir.mkdir()
+    (output_dir / "structured.json").write_text(
+        json.dumps({"metrics": {"citation_reconciliation": 0.9, "dirty_entries": 2}})
+    )
+    policy = {
+        "require_structured_artifact": False,
+        "batch_contract": {
+            "metrics_file": "output/structured.json",
+            "metrics": {
+                "metrics.citation_reconciliation": {"min": 0.5},
+                "metrics.dirty_entries": {"max": 4},
+            },
+        },
+    }
+    result = audit_root(tmp_path, policy)
+    assert result["passed"] is True
+    assert result["findings"] == []
+
+
+def test_batch_contract_flags_violation_and_unknown(tmp_path: Path) -> None:
+    run_dir = tmp_path / "run-a"
+    run_dir.mkdir()
+    (run_dir / "archive.json").write_text(
+        json.dumps({"goals": [{"id": "g1", "title": "T"}], "active_goal_id": "g1"})
+    )
+    output_dir = run_dir / "output"
+    output_dir.mkdir()
+    (output_dir / "structured.json").write_text(
+        json.dumps({"metrics": {"citation_reconciliation": 0.2, "dirty_entries": 9}})
+    )
+    policy = {
+        "require_structured_artifact": False,
+        "batch_contract": {
+            "metrics_file": "output/structured.json",
+            "metrics": {
+                "metrics.citation_reconciliation": {"min": 0.5},
+                "metrics.dirty_entries": {"max": 4},
+                "metrics.method_honesty": {"min": 0.95},
+            },
+        },
+    }
+    result = audit_root(tmp_path, policy)
+    assert result["passed"] is False
+    codes = {finding["code"] for finding in result["findings"]}
+    assert "batch_metric_violation" in codes
+    assert "batch_metric_unknown" in codes
