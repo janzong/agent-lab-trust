@@ -40,3 +40,4 @@ Synthetic evidence only. No real learner data, no RMAS integration, and no cross
 ## Measurement semantics
 
 - [`docs/validity-states.md`](docs/validity-states.md) — the three validity states (valid / invalid / unknown-or-unattributable), the absent-zero rule, a sanitized incident, and the billing-state mapping. 中文对照：[`docs/validity-states.zh-CN.md`](docs/validity-states.zh-CN.md)。
+- [`docs/field-manual.md`](docs/field-manual.md) — a thematic guide organizing all published methodology by topic: measurement, governance, collaboration, cognitive framework, and negative results.
