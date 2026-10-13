@@ -183,3 +183,10 @@ def test_batch_contract_flags_violation_and_unknown(tmp_path: Path) -> None:
     codes = {finding["code"] for finding in result["findings"]}
     assert "batch_metric_violation" in codes
     assert "batch_metric_unknown" in codes
+
+
+def test_shipped_example_policy_passes_bundled_fixture() -> None:
+    root = Path(__file__).parent / "fixtures" / "gen-mentor"
+    policy = json.loads((Path(__file__).parent.parent / "policy.example.json").read_text())
+    result = audit_root(root, policy)
+    assert result["passed"] is True, result["findings"]

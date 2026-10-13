@@ -87,6 +87,10 @@ emits `batch_metric_unknown` (fail-closed), not zero — per the
 metric only exists for new runs, split it into a separate metrics file or
 version the file name rather than breaking the contract for old runs.
 
+`policy.example.json` intentionally stays minimal so the bundled fixture
+passes; add the `batch_contract` section only after your producer emits the
+metrics it names.
+
 ```bash
 agent-lab-trust audit tests/fixtures/gen-mentor --policy policy.example.json
 ```
