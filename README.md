@@ -100,6 +100,13 @@ artifact contracts (`required_artifacts` with `required_artifacts_mode: all|any`
 and forbidden markers. It prints a canonical `audit_hash`. `deletion-proof
 --output <path>` writes the deletion proof used in the same policy flow.
 
+## Method cards
+
+[`docs/method-cards-20261026.md`](docs/method-cards-20261026.md) generalizes
+production governance patterns into reusable audit ideas: exact evidence chains,
+dry-run-first writes, negative-result gates, human-sample semantic gates, source
+purity views, and dual-host parity.
+
 ## Reproduction status
 
 Three independent non-author reproductions are complete, and the reproduction
