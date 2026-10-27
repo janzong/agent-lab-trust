@@ -139,6 +139,9 @@ Retain:
 - threshold;
 - production write count, normally zero.
 
+Public case pattern:
+[`docs/cases/negative-result-gate.md`](cases/negative-result-gate.md).
+
 ## 4. Human-Sample Semantic Gate
 
 ### Problem

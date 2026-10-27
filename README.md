@@ -115,6 +115,12 @@ fail-closed behavior. See
 [`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md). No candidate is
 executable by the v0.1.0 CLI yet.
 
+## Public case patterns
+
+[`docs/cases/negative-result-gate.md`](docs/cases/negative-result-gate.md)
+generalizes the 308-candidate / 20%-precision / zero-production-write trial into
+a reusable governance pattern.
+
 ## Theory essay
 
 [`From Capability to Governed Production`](https://dev.to/janzong/from-capability-to-governed-production-5g7k)

@@ -31,3 +31,6 @@ method card
 
 Implementation should begin only after one real adapter can provide all inputs
 for at least two checks.
+
+Public case pattern for `negative_result_gate`:
+[`../docs/cases/negative-result-gate.md`](cases/negative-result-gate.md).

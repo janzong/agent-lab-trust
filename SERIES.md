@@ -8,6 +8,7 @@ Write it down → test it → govern it.
 | **2. Test it** | Do agents actually behave as claimed? | `agent-lab-trust`: validate runs, hashed reports, deletion proof, one-command reproduction, Docker image — <https://github.com/janzong/agent-lab-trust> · <https://gitee.com/janzong/agent-lab-trust> · write-up: https://dev.to/janzong/we-ran-2-vs-4-agents-six-times-four-agents-cost-21x-and-did-not-improve-success-k98 |
 | **3. Govern it** | How do we constrain, audit, and prove effect? | `agent-lab-trust audit <root> --policy policy.example.json`: policy-as-code checks for cost/call caps, structured artifacts, forbidden markers, and a canonical `audit_hash`; `deletion-proof --output` writes the deletion proof for the same policy flow. · write-up: https://dev.to/janzong/your-agent-run-passed-can-you-prove-it-was-allowed-3d5i |
 | **4. Theorize it** | How does capability become governed production? | [`From Capability to Governed Production`](https://dev.to/janzong/from-capability-to-governed-production-5g7k) — a published minimal theory covering evidence chains, semantic gates, negative-result capital, asset reproduction, and runtime identity. |
+| **5. Turn it into a case pattern** | How does a failed trial become reusable governance? | [`Negative-result gate case pattern`](docs/cases/negative-result-gate.md) — preregistered threshold, retained human review, failed precision gate, and zero production writes. |
 
 Underlying method package: <https://github.com/janzong/agent-lab-method>.
 
