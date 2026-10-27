@@ -115,6 +115,13 @@ fail-closed behavior. See
 [`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md). No candidate is
 executable by the v0.1.0 CLI yet.
 
+## Theory essay
+
+[`docs/essays/2026-10-27-from-capability-to-governed-production.md`](docs/essays/2026-10-27-from-capability-to-governed-production.md)
+proposes a minimal theory of governed agent production: evidence chains, human
+semantic gates, negative-result gates, asset reproduction, deployment/model
+identity, and bounded expansion.
+
 ## Reproduction status
 
 Three independent non-author reproductions are complete, and the reproduction
