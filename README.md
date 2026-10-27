@@ -118,9 +118,9 @@ executable by the v0.1.0 CLI yet.
 ## Theory essay
 
 [`docs/essays/2026-10-27-from-capability-to-governed-production.md`](docs/essays/2026-10-27-from-capability-to-governed-production.md)
-proposes a minimal theory of governed agent production: evidence chains, human
-semantic gates, negative-result gates, asset reproduction, deployment/model
-identity, and bounded expansion.
+proposes a minimal theory of governed agent production. The shorter
+human-review edition is
+[`docs/essays/from-capability-to-governed-production-public-v1.md`](docs/essays/from-capability-to-governed-production-public-v1.md).
 
 ## Reproduction status
 
