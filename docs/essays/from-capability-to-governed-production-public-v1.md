@@ -1,8 +1,9 @@
 # From Capability to Governed Production
 
-> Status: `approved_for_publication_2026-10-27`
+> Status: `published_2026-10-27`
 > Draft: 2026-10-27
 > Human approval: Janz, 2026-10-27
+> Published: <https://dev.to/janzong/from-capability-to-governed-production-5g7k>
 > Companion artifacts: [method cards](../method-cards-20261026.md) · [policy
  candidates](../policy-candidates-v0.md)
 
