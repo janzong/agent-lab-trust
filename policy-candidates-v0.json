@@ -1,0 +1,68 @@
+{
+  "schema_version": 0,
+  "status": "design_not_executable",
+  "checks": [
+    {
+      "id": "exact_evidence_required",
+      "title": "Exact evidence chain",
+      "method_card": "docs/method-cards-20261026.md#1-exact-evidence-chain",
+      "policy_type": "required",
+      "fail_closed": true,
+      "expected_inputs": ["asset_id", "quote", "source_sha", "chunk_id", "source_status"]
+    },
+    {
+      "id": "dry_run_required",
+      "title": "Dry-run first",
+      "method_card": "docs/method-cards-20261026.md#2-dry-run-first",
+      "policy_type": "required_transition",
+      "fail_closed": true,
+      "expected_inputs": ["plan_artifact", "apply_flag", "manifest_path"]
+    },
+    {
+      "id": "negative_result_gate",
+      "title": "Negative-result gate",
+      "method_card": "docs/method-cards-20261026.md#3-negative-result-gate",
+      "policy_type": "threshold",
+      "fail_closed": true,
+      "threshold": {"metric": "human_precision", "minimum": 0.8},
+      "on_failure": "block",
+      "blocked_operation": "production_write",
+      "expected_inputs": ["candidate_count", "human_sample_count", "correct_count", "production_write_count"]
+    },
+    {
+      "id": "human_precision_threshold",
+      "title": "Human-sample semantic gate",
+      "method_card": "docs/method-cards-20261026.md#4-human-sample-semantic-gate",
+      "policy_type": "threshold",
+      "fail_closed": true,
+      "threshold": {"metric": "human_precision", "minimum": 0.8, "minimum_sample": 25},
+      "on_failure": "block",
+      "blocked_operation": "semantic_write",
+      "expected_inputs": ["model_version", "label_distribution", "sample_ids", "agreement_count"]
+    },
+    {
+      "id": "source_purity_required",
+      "title": "Source purity view",
+      "method_card": "docs/method-cards-20261026.md#5-source-purity-view",
+      "policy_type": "required",
+      "fail_closed": true,
+      "expected_inputs": ["requested_source", "returned_source", "non_target_count", "fallback_source"]
+    },
+    {
+      "id": "host_parity_required",
+      "title": "Dual-host parity",
+      "method_card": "docs/method-cards-20261026.md#6-dual-host-parity",
+      "policy_type": "required",
+      "fail_closed": true,
+      "expected_inputs": ["table_counts", "checksums", "user_data_counts", "rollback_path"]
+    },
+    {
+      "id": "rollback_manifest_required",
+      "title": "Rollback manifest required",
+      "method_card": "docs/method-cards-20261026.md#2-dry-run-first",
+      "policy_type": "required_artifact",
+      "fail_closed": true,
+      "expected_inputs": ["rollback_path", "manifest_path"]
+    }
+  ]
+}

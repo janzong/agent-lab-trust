@@ -107,6 +107,14 @@ production governance patterns into reusable audit ideas: exact evidence chains,
 dry-run-first writes, negative-result gates, human-sample semantic gates, source
 purity views, and dual-host parity.
 
+## Policy candidates
+
+[`policy-candidates-v0.json`](policy-candidates-v0.json) defines the design-only
+successor to those cards: named checks, required inputs, thresholds, and
+fail-closed behavior. See
+[`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md). No candidate is
+executable by the v0.1.0 CLI yet.
+
 ## Reproduction status
 
 Three independent non-author reproductions are complete, and the reproduction

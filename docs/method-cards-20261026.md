@@ -279,3 +279,8 @@ rollback_manifest_required
 
 The important design rule is that a passing check should leave enough evidence
 for a later non-author to reproduce the decision from artifacts.
+
+The design-level successor to this list is
+[`../policy-candidates-v0.json`](../policy-candidates-v0.json), which names the
+checks, required inputs, thresholds, and fail-closed behavior. It is not yet an
+executable policy.
