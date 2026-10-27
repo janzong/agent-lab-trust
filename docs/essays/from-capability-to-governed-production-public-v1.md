@@ -1,7 +1,8 @@
 # From Capability to Governed Production
 
-> Status: `ready_for_human_review`  
-> Draft: 2026-10-27  
+> Status: `approved_for_publication_2026-10-27`
+> Draft: 2026-10-27
+> Human approval: Janz, 2026-10-27
 > Companion artifacts: [method cards](../method-cards-20261026.md) · [policy
  candidates](../policy-candidates-v0.md)
 
