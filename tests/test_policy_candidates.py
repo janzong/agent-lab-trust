@@ -38,3 +38,18 @@ def test_reproduction_and_natural_reuse_checks_are_fail_closed() -> None:
     assert checks["natural_reuse_requires_uncontrolled_selection"]["fail_closed"] is True
     assert checks["runtime_identity_required"]["fail_closed"] is True
     assert checks["bounded_expansion_tiering_required"]["fail_closed"] is True
+
+
+def test_executable_flags_match_evaluator_contract() -> None:
+    from agent_lab_trust.policy_checks import IMPLEMENTED_CHECKS
+
+    payload = json.loads((ROOT / "policy-candidates-v0.json").read_text(encoding="utf-8"))
+    implemented = {check["id"] for check in payload["checks"] if check.get("implemented") is True}
+
+    assert implemented == IMPLEMENTED_CHECKS
+    assert implemented == {
+        "negative_result_gate",
+        "human_precision_threshold",
+        "rollback_manifest_required",
+        "natural_reuse_requires_uncontrolled_selection",
+    }

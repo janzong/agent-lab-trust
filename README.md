@@ -56,7 +56,7 @@ Expected:
 
 | Check | Expected |
 |---|---|
-| tests | 38 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
+| tests | 39 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |

@@ -6,18 +6,18 @@ are executable in v0; the remaining checks stay design-only.
 
 ## Candidate checks
 
-| Check | Failure mode |
-|---|---|
-| `exact_evidence_required` | fail closed if exact source/chunk evidence is absent |
-| `dry_run_required` | fail closed if a production mutation has no dry-run plan |
-| `negative_result_gate` | block production writes when human precision misses 0.80 |
-| `human_precision_threshold` | block semantic writes below 0.80 precision |
-| `source_purity_required` | fail closed when a requested source view is contaminated |
-| `host_parity_required` | fail closed when host counts/checksums differ |
-| `rollback_manifest_required` | fail closed when rollback/manifest artifacts are absent |
-| `natural_reuse_requires_uncontrolled_selection` | fail closed when controlled adoption is presented as natural reuse |
-| `runtime_identity_required` | fail closed when code, process, artifact, data, or model identity is absent |
-| `bounded_expansion_tiering_required` | fail closed when expansion beyond a seed lacks explicit evidence tiers |
+| Check | Executable v0 | Failure mode |
+|---|---|---|
+| `exact_evidence_required` | no | fail closed if exact source/chunk evidence is absent |
+| `dry_run_required` | no | fail closed if a production mutation has no dry-run plan |
+| `negative_result_gate` | yes | block production writes when human precision misses 0.80 |
+| `human_precision_threshold` | yes | block semantic writes below 0.80 precision |
+| `source_purity_required` | no | fail closed when a requested source view is contaminated |
+| `host_parity_required` | no | fail closed when host counts/checksums differ |
+| `rollback_manifest_required` | yes | fail closed when rollback/manifest artifacts are absent |
+| `natural_reuse_requires_uncontrolled_selection` | yes | fail closed when controlled reuse is claimed without natural selection and accepted material use |
+| `runtime_identity_required` | no | fail closed when code, process, artifact, data, or model identity is absent |
+| `bounded_expansion_tiering_required` | no | fail closed when expansion beyond a seed lacks explicit evidence tiers |
 
 ## Boundary
 

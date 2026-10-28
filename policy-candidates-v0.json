@@ -8,6 +8,7 @@
       "method_card": "docs/method-cards-20261026.md#1-exact-evidence-chain",
       "policy_type": "required",
       "fail_closed": true,
+      "implemented": false,
       "expected_inputs": ["asset_id", "quote", "source_sha", "chunk_id", "source_status"]
     },
     {
@@ -16,6 +17,7 @@
       "method_card": "docs/method-cards-20261026.md#2-dry-run-first",
       "policy_type": "required_transition",
       "fail_closed": true,
+      "implemented": false,
       "expected_inputs": ["plan_artifact", "apply_flag", "manifest_path"]
     },
     {
@@ -24,6 +26,7 @@
       "method_card": "docs/method-cards-20261026.md#3-negative-result-gate",
       "policy_type": "threshold",
       "fail_closed": true,
+      "implemented": true,
       "threshold": {"metric": "human_precision", "minimum": 0.8},
       "on_failure": "block",
       "blocked_operation": "production_write",
@@ -35,6 +38,7 @@
       "method_card": "docs/method-cards-20261026.md#4-human-sample-semantic-gate",
       "policy_type": "threshold",
       "fail_closed": true,
+      "implemented": true,
       "threshold": {"metric": "human_precision", "minimum": 0.8, "minimum_sample": 25},
       "on_failure": "block",
       "blocked_operation": "semantic_write",
@@ -46,6 +50,7 @@
       "method_card": "docs/method-cards-20261026.md#5-source-purity-view",
       "policy_type": "required",
       "fail_closed": true,
+      "implemented": false,
       "expected_inputs": ["requested_source", "returned_source", "non_target_count", "fallback_source"]
     },
     {
@@ -54,6 +59,7 @@
       "method_card": "docs/method-cards-20261026.md#6-dual-host-parity",
       "policy_type": "required",
       "fail_closed": true,
+      "implemented": false,
       "expected_inputs": ["table_counts", "checksums", "user_data_counts", "rollback_path"]
     },
     {
@@ -62,6 +68,7 @@
       "method_card": "docs/method-cards-20261026.md#2-dry-run-first",
       "policy_type": "required_artifact",
       "fail_closed": true,
+      "implemented": true,
       "expected_inputs": ["rollback_path", "manifest_path"]
     },
     {
@@ -70,6 +77,7 @@
       "method_card": "docs/method-cards-20261026.md#7-natural-reuse-observation",
       "policy_type": "required_transition",
       "fail_closed": true,
+      "implemented": true,
       "expected_inputs": [
         "cohort_cutoff",
         "controlled_project_exclusions",
@@ -85,6 +93,7 @@
       "method_card": "docs/method-cards-20261026.md#9-bounded-expansion-tiering",
       "policy_type": "required",
       "fail_closed": true,
+      "implemented": false,
       "expected_inputs": [
         "target_commit",
         "actual_commit",
@@ -104,6 +113,7 @@
       "method_card": "docs/method-cards-20261026.md#8-runtime-identity",
       "policy_type": "required",
       "fail_closed": true,
+      "implemented": false,
       "expected_inputs": [
         "seed_context_id",
         "canonical_reference_ids",
