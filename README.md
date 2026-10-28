@@ -139,12 +139,14 @@ See [`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md).
 
 ## Public case patterns
 
-The repository now includes three public case patterns:
+The repository now includes six public case patterns:
 
 - [`negative-result-gate.md`](docs/cases/negative-result-gate.md) — 308 candidates, 20% precision, zero production writes;
 - [`exact-evidence-chain.md`](docs/cases/exact-evidence-chain.md) — exact quote, current chunk, published source;
 - [`controlled-adoption-is-not-asset-reproduction.md`](docs/cases/controlled-adoption-is-not-asset-reproduction.md) — controlled acceptance versus natural reuse.
 - [`human-semantic-gate.md`](docs/cases/human-semantic-gate.md) — measured human review before semantic writes.
+- [`runtime-identity.md`](docs/cases/runtime-identity.md) — code, process, artifact, data, and model identity.
+- [`bounded-expansion.md`](docs/cases/bounded-expansion.md) — evidence-tiered expansion with question-only fallback.
 
 ## Theory essay
 
