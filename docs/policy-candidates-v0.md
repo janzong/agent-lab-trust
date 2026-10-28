@@ -15,6 +15,9 @@ cards: named checks that a future audit policy can express. It is deliberately
 | `source_purity_required` | fail closed when a requested source view is contaminated |
 | `host_parity_required` | fail closed when host counts/checksums differ |
 | `rollback_manifest_required` | fail closed when rollback/manifest artifacts are absent |
+| `natural_reuse_requires_uncontrolled_selection` | fail closed when controlled adoption is presented as natural reuse |
+| `runtime_identity_required` | fail closed when code, process, artifact, data, or model identity is absent |
+| `bounded_expansion_tiering_required` | fail closed when expansion beyond a seed lacks explicit evidence tiers |
 
 ## Boundary
 

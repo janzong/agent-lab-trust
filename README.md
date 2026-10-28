@@ -56,7 +56,7 @@ Expected:
 
 | Check | Expected |
 |---|---|
-| tests | 22 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
+| tests | 29 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
@@ -105,7 +105,8 @@ and forbidden markers. It prints a canonical `audit_hash`. `deletion-proof
 [`docs/method-cards-20261026.md`](docs/method-cards-20261026.md) generalizes
 production governance patterns into reusable audit ideas: exact evidence chains,
 dry-run-first writes, negative-result gates, human-sample semantic gates, source
-purity views, and dual-host parity.
+purity views, dual-host parity, natural-reuse observation, runtime identity, and
+bounded expansion tiering.
 
 ## Policy candidates
 

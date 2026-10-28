@@ -63,6 +63,53 @@
       "policy_type": "required_artifact",
       "fail_closed": true,
       "expected_inputs": ["rollback_path", "manifest_path"]
+    },
+    {
+      "id": "natural_reuse_requires_uncontrolled_selection",
+      "title": "Natural-reuse observation",
+      "method_card": "docs/method-cards-20261026.md#7-natural-reuse-observation",
+      "policy_type": "required_transition",
+      "fail_closed": true,
+      "expected_inputs": [
+        "cohort_cutoff",
+        "controlled_project_exclusions",
+        "eligible_workflow_count",
+        "natural_selection_rows",
+        "accepted_material_use_rows"
+      ]
+    },
+    {
+      "id": "runtime_identity_required",
+      "title": "Runtime identity",
+      "method_card": "docs/method-cards-20261026.md#9-bounded-expansion-tiering",
+      "policy_type": "required",
+      "fail_closed": true,
+      "expected_inputs": [
+        "target_commit",
+        "actual_commit",
+        "process_start_time",
+        "health_version",
+        "artifact_hash",
+        "table_counts",
+        "rollback_path",
+        "requested_model",
+        "served_model",
+        "provider"
+      ]
+    },
+    {
+      "id": "bounded_expansion_tiering_required",
+      "title": "Bounded expansion tiering",
+      "method_card": "docs/method-cards-20261026.md#8-runtime-identity",
+      "policy_type": "required",
+      "fail_closed": true,
+      "expected_inputs": [
+        "seed_context_id",
+        "canonical_reference_ids",
+        "external_evidence_ids",
+        "unsupported_statements",
+        "question_only_fallbacks"
+      ]
     }
   ]
 }

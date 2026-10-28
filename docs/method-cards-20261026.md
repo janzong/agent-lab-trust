@@ -267,6 +267,126 @@ Retain:
 - rollback path;
 - health and deployment verification.
 
+## 7. Natural-Reuse Observation
+
+### Problem
+
+A controlled experiment can prove that an asset can be selected and accepted,
+but that does not prove a later normal workflow will naturally choose it.
+
+### Method
+
+Separate the observation stages:
+
+```text
+controlled activation
+→ cohort cutoff
+→ later non-controlled workflow
+→ natural selection event
+→ accepted material use
+```
+
+Exclude controlled project IDs and experimental config families from the later
+cohort. Record both selection and accepted material use; do not infer reuse from
+stock or invocation counts alone.
+
+### Boundary
+
+A zero-use cohort is a negative observation, not proof that the asset is
+useless. A highly concentrated cohort should not be generalized to all workflow
+families.
+
+### Evidence
+
+Retain:
+
+- cohort cutoff;
+- target asset IDs;
+- controlled-project exclusions;
+- eligible workflow count;
+- natural selection rows;
+- accepted material-use rows;
+- workflow/config/source distribution;
+- creation-time concentration.
+
+## 8. Runtime Identity
+
+### Problem
+
+A health endpoint can report success while the process, code, artifact, data, or
+served model differs from the intended runtime.
+
+### Method
+
+Bind runtime identity before attributing output:
+
+```text
+target commit
+actual commit
+process start time
+health version
+artifact hash
+table parity
+rollback path
+requested model
+served model
+provider
+```
+
+### Boundary
+
+Runtime identity proves provenance. It does not prove semantic correctness,
+output quality, or business value.
+
+### Evidence
+
+Retain:
+
+- target/actual commit comparison;
+- process start timestamp;
+- frontend artifact hash;
+- table counts or checksums;
+- rollback position;
+- requested and served model fields;
+- provider/base URL;
+- deployment verification result.
+
+## 9. Bounded Expansion Tiering
+
+### Problem
+
+An assistant often needs to move beyond the supplied course or task context,
+but unbounded expansion can convert inference into false authority.
+
+### Method
+
+Label every expansion tier:
+
+```text
+course/task seed
+→ canonical reference or theory whitelist
+→ evidence-backed external expansion
+→ question-only fallback
+```
+
+Unsupported statements must remain questions rather than conclusions.
+
+### Boundary
+
+Tiering improves provenance and reviewability. It does not by itself prove
+teaching effectiveness or user value.
+
+### Evidence
+
+Retain:
+
+- seed context identifier;
+- canonical/theory references;
+- external evidence identifiers;
+- unsupported statements;
+- question-only fallbacks;
+- reviewer or teacher decision where available.
+
 ## Use in an Audit Policy
 
 These cards can be represented in policy as required checks:
@@ -275,8 +395,12 @@ These cards can be represented in policy as required checks:
 exact_evidence_required
 production_write_requires_explicit_apply
 human_precision_threshold
+natural_reuse_requires_uncontrolled_selection
+negative_result_gate
 source_purity_required
 host_parity_required
+runtime_identity_required
+bounded_expansion_tiering_required
 rollback_manifest_required
 ```
 
