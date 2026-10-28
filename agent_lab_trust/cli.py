@@ -18,6 +18,9 @@ from agent_lab_trust.policy_checks import (
 )
 
 
+DEFAULT_POLICY_CANDIDATES = Path(__file__).with_name("policy-candidates-v0.json")
+
+
 def _classify_failure(success: bool, error: str | None) -> str:
     if success:
         return "ok"
@@ -74,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
     policy_check.add_argument(
         "--policy",
         type=Path,
-        default=Path("policy-candidates-v0.json"),
+        default=DEFAULT_POLICY_CANDIDATES,
         help="path to policy-candidates-v0.json",
     )
     policy_check.add_argument(

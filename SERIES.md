@@ -20,7 +20,7 @@ docker run --rm ghcr.io/janzong/agent-lab-trust@sha256:a5a170b2b2801bd61ff9c189c
 
 or `bash scripts/reproduce.sh`.
 
-Expected on current main: `45 passed` under both `TZ=UTC` and
+Expected on current main: `46 passed` under both `TZ=UTC` and
 `TZ=Asia/Shanghai`, `report_hash` `a841b192981fd7e7`, deletion `audit_hash`
 `4f0193abbd49a0f9`, governance `audit_hash`
 `b304f294834a5901101d45fb98547c233d90e16c2f7cb5b965ce16641b1acbd3`, and
@@ -34,6 +34,9 @@ Three non-author reproductions are complete; the gate issue is closed as complet
 
 Current release: **v0.1.0** —
 <https://github.com/janzong/agent-lab-trust/releases/tag/v0.1.0>.
+
+Current main prepares **v0.2.0-rc1** with ten executable policy checks. The
+candidate wheel is built but not published.
 
 ## Non-claims
 

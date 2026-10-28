@@ -56,7 +56,7 @@ Expected:
 
 | Check | Expected |
 |---|---|
-| tests | 45 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
+| tests | 46 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
@@ -159,6 +159,10 @@ issue is closed as completed:
 
 v0.1.0 is published:
 <https://github.com/janzong/agent-lab-trust/releases/tag/v0.1.0>.
+
+Current main is preparing **v0.2.0-rc1** with the input-first policy evaluator.
+The candidate wheel has been built and inspected locally but is not published:
+see [`docs/release/v0.2.0-rc1.md`](docs/release/v0.2.0-rc1.md).
 
 Current main requires Python 3.11 or newer. The pre-audit `v0.1.0-rc2`
 snapshot remains available from the release tag; use the pinned Docker digest

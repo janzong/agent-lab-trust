@@ -439,7 +439,11 @@ def main() -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("evidence", type=Path)
-    parser.add_argument("--policy", type=Path, default=Path("policy-candidates-v0.json"))
+    parser.add_argument(
+        "--policy",
+        type=Path,
+        default=Path(__file__).with_name("policy-candidates-v0.json"),
+    )
     parser.add_argument("--root", type=Path, default=Path("."))
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()

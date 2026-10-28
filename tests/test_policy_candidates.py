@@ -59,3 +59,9 @@ def test_executable_flags_match_evaluator_contract() -> None:
         "host_parity_required",
         "bounded_expansion_tiering_required",
     }
+
+
+def test_packaged_policy_candidates_match_public_copy() -> None:
+    packaged = ROOT / "agent_lab_trust" / "policy-candidates-v0.json"
+    public = ROOT / "policy-candidates-v0.json"
+    assert packaged.read_bytes() == public.read_bytes()
