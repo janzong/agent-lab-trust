@@ -61,6 +61,7 @@ Expected:
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
 | `audit` | `passed: true`, `audit_hash` `b304f294834a5901101d45fb98547c233d90e16c2f7cb5b965ce16641b1acbd3` |
+| `policy-check` | `passed: true`, 10 implemented checks, no missing inputs |
 
 ## Governance audit
 

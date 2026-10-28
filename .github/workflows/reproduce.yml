@@ -31,3 +31,9 @@ jobs:
         run: python -m agent_lab_trust.cli deletion-proof
       - name: Governance audit
         run: python -m agent_lab_trust.cli audit tests/fixtures/gen-mentor --policy policy.example.json
+      - name: Policy candidates
+        run: >-
+          python -m agent_lab_trust.cli policy-check
+          examples/policy-evidence/evidence.json
+          --policy policy-candidates-v0.json
+          --root examples/policy-evidence
