@@ -1,4 +1,5 @@
 import shutil
+import json
 from pathlib import Path
 
 from agent_lab_trust.cli import main
@@ -20,3 +21,65 @@ def test_cli_validate_prints_run_summary(tmp_path: Path, capsys) -> None:
     assert len(lines) == 1
     assert '"run_id": "replay-sample"' in lines[0]
     assert '"project": "gen-mentor"' in lines[0]
+
+
+def test_cli_policy_check_emits_canonical_evaluation(tmp_path: Path, capsys) -> None:
+    (tmp_path / "rollback.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "manifest.json").write_text("{}", encoding="utf-8")
+    evidence = {
+        "schema_version": 0,
+        "checks": {
+            "negative_result_gate": {
+                "candidate_count": 308,
+                "human_sample_count": 50,
+                "correct_count": 10,
+                "production_write_count": 0,
+            },
+            "human_precision_threshold": {
+                "sample_count": 25,
+                "agreement_count": 22,
+            },
+            "rollback_manifest_required": {
+                "rollback_path": "rollback.json",
+                "manifest_path": "manifest.json",
+            },
+        },
+    }
+    evidence_path = tmp_path / "evidence.json"
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+
+    exit_code = main([
+        "policy-check",
+        str(evidence_path),
+        "--policy",
+        str(Path(__file__).parent.parent / "policy-candidates-v0.json"),
+        "--root",
+        str(tmp_path),
+    ])
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["passed"] is True
+    assert payload["policy_sha256"]
+    assert payload["evaluation_sha256"]
+
+
+def test_shipped_policy_evidence_example_passes(capsys) -> None:
+    root = Path(__file__).parent.parent / "examples" / "policy-evidence"
+    exit_code = main([
+        "policy-check",
+        str(root / "evidence.json"),
+        "--policy",
+        str(Path(__file__).parent.parent / "policy-candidates-v0.json"),
+        "--root",
+        str(root),
+    ])
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["passed"] is True
+    assert payload["implemented_checks"] == [
+        "human_precision_threshold",
+        "negative_result_gate",
+        "rollback_manifest_required",
+    ]

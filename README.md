@@ -56,7 +56,7 @@ Expected:
 
 | Check | Expected |
 |---|---|
-| tests | 29 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
+| tests | 37 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
@@ -110,11 +110,24 @@ bounded expansion tiering.
 
 ## Policy candidates
 
-[`policy-candidates-v0.json`](policy-candidates-v0.json) defines the design-only
-successor to those cards: named checks, required inputs, thresholds, and
-fail-closed behavior. See
-[`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md). No candidate is
-executable by the v0.1.0 CLI yet.
+[`policy-candidates-v0.json`](policy-candidates-v0.json) defines named checks,
+required inputs, thresholds, and fail-closed behavior. Three checks are
+executable in v0:
+
+```text
+negative_result_gate
+human_precision_threshold
+rollback_manifest_required
+```
+
+```bash
+agent-lab-trust policy-check examples/policy-evidence/evidence.json \
+  --policy policy-candidates-v0.json \
+  --root examples/policy-evidence
+```
+
+The remaining candidates stay design-only. See
+[`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md).
 
 ## Public case patterns
 

@@ -1,0 +1,5 @@
+{
+  "kind": "synthetic-manifest-example",
+  "changes": [],
+  "rollback": "rollback.json"
+}

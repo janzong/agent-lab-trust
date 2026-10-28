@@ -1,0 +1,5 @@
+{
+  "kind": "synthetic-rollback-example",
+  "restore_from": "backup.example.db",
+  "verified": true
+}

@@ -11,6 +11,11 @@ from pathlib import Path
 from agent_lab_trust.adapters.gen_mentor import GenMentorAdapter
 from agent_lab_trust.deletion import run_deletion_proof
 from agent_lab_trust.governance import audit_root, load_policy
+from agent_lab_trust.policy_checks import (
+    PolicyEvaluationError,
+    evaluate_policy_evidence,
+    load_policy_candidates,
+)
 
 
 def _classify_failure(success: bool, error: str | None) -> str:
@@ -61,6 +66,24 @@ def main(argv: list[str] | None = None) -> int:
     audit.add_argument("root", type=Path, help="directory containing run subdirectories")
     audit.add_argument("--policy", type=Path, required=True, help="path to a JSON policy file")
     audit.add_argument("--output", type=Path, default=None, help="write the audit result JSON to this path")
+    policy_check = subcommands.add_parser(
+        "policy-check",
+        help="evaluate the executable v0 policy candidates against an evidence file",
+    )
+    policy_check.add_argument("evidence", type=Path, help="path to a policy evidence JSON file")
+    policy_check.add_argument(
+        "--policy",
+        type=Path,
+        default=Path("policy-candidates-v0.json"),
+        help="path to policy-candidates-v0.json",
+    )
+    policy_check.add_argument(
+        "--root",
+        type=Path,
+        default=Path("."),
+        help="root for resolving rollback and manifest paths",
+    )
+    policy_check.add_argument("--output", type=Path, default=None, help="write the evaluation JSON to this path")
     args = parser.parse_args(argv)
 
     if args.command in {"validate", "report"}:
@@ -108,6 +131,20 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "audit":
         policy = load_policy(args.policy)
         result = audit_root(args.root, policy)
+        payload = json.dumps(result, ensure_ascii=False, sort_keys=True)
+        if args.output is not None:
+            args.output.write_text(payload + "\n", encoding="utf-8")
+        print(payload)
+        return 0 if result["passed"] else 1
+
+    if args.command == "policy-check":
+        try:
+            policy = load_policy_candidates(args.policy)
+            evidence = json.loads(args.evidence.read_text(encoding="utf-8"))
+            result = evaluate_policy_evidence(policy, evidence, root=args.root)
+        except (OSError, json.JSONDecodeError, PolicyEvaluationError) as exc:
+            print(f"policy-check: {exc}", file=sys.stderr)
+            return 2
         payload = json.dumps(result, ensure_ascii=False, sort_keys=True)
         if args.output is not None:
             args.output.write_text(payload + "\n", encoding="utf-8")

@@ -1,0 +1,19 @@
+{
+  "schema_version": 0,
+  "checks": {
+    "negative_result_gate": {
+      "candidate_count": 308,
+      "human_sample_count": 50,
+      "correct_count": 10,
+      "production_write_count": 0
+    },
+    "human_precision_threshold": {
+      "sample_count": 25,
+      "agreement_count": 22
+    },
+    "rollback_manifest_required": {
+      "rollback_path": "rollback.json",
+      "manifest_path": "manifest.json"
+    }
+  }
+}

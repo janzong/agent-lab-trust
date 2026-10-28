@@ -1,6 +1,6 @@
 {
   "schema_version": 0,
-  "status": "design_not_executable",
+  "status": "partially_executable_v0",
   "checks": [
     {
       "id": "exact_evidence_required",

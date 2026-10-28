@@ -1,8 +1,8 @@
 # Agent Trust Policy Candidates v0
 
 `policy-candidates-v0.json` defines the next layer above the current method
-cards: named checks that a future audit policy can express. It is deliberately
-**design-only** and not executable by the v0.1.0 CLI.
+cards: named checks that an audit policy can express. Three inputs-first checks
+are executable in v0; the remaining checks stay design-only.
 
 ## Candidate checks
 
@@ -32,8 +32,17 @@ method card
 → fail-closed behavior
 ```
 
-Implementation should begin only after one real adapter can provide all inputs
-for at least two checks.
+The shipped example can be evaluated without touching any external system:
+
+```bash
+agent-lab-trust policy-check examples/policy-evidence/evidence.json \
+  --policy policy-candidates-v0.json \
+  --root examples/policy-evidence
+```
+
+Missing evidence for any implemented check is fail-closed. The output includes
+per-check results, missing inputs, unimplemented checks, `policy_sha256`, and
+`evaluation_sha256`.
 
 Public case pattern for `negative_result_gate`:
 [`../docs/cases/negative-result-gate.md`](cases/negative-result-gate.md).

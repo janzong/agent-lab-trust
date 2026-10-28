@@ -10,7 +10,7 @@ def test_policy_candidate_contract_is_unique_fail_closed_and_linked() -> None:
     checks = payload["checks"]
 
     assert payload["schema_version"] == 0
-    assert payload["status"] == "design_not_executable"
+    assert payload["status"] == "partially_executable_v0"
     assert len(checks) == 10
     assert len({check["id"] for check in checks}) == 10
     assert all(check["fail_closed"] is True for check in checks)
