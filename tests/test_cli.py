@@ -26,6 +26,7 @@ def test_cli_validate_prints_run_summary(tmp_path: Path, capsys) -> None:
 def test_cli_policy_check_emits_canonical_evaluation(tmp_path: Path, capsys) -> None:
     (tmp_path / "rollback.json").write_text("{}", encoding="utf-8")
     (tmp_path / "manifest.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "plan.json").write_text("{}", encoding="utf-8")
     evidence = {
         "schema_version": 0,
         "checks": {
@@ -73,6 +74,32 @@ def test_cli_policy_check_emits_canonical_evaluation(tmp_path: Path, capsys) -> 
                 "served_model": "deepseek-chat",
                 "provider": "deepseek",
             },
+            "dry_run_required": {
+                "production_write_attempted": False,
+                "plan_artifact": "plan.json",
+                "apply_flag": False,
+                "manifest_path": "manifest.json",
+                "dry_run_recorded": False,
+            },
+            "source_purity_required": {
+                "requested_source": "literature",
+                "returned_source": "literature",
+                "non_target_count": 0,
+                "fallback_source": None,
+            },
+            "host_parity_required": {
+                "table_counts": {"primary": {"nodes": 10}, "secondary": {"nodes": 10}},
+                "checksums": {"primary": "abc", "secondary": "abc"},
+                "user_data_counts": {"primary": {"users": 2}, "secondary": {"users": 2}},
+                "rollback_path": "rollback.json",
+            },
+            "bounded_expansion_tiering_required": {
+                "seed_context_id": "course-1",
+                "canonical_reference_ids": ["theory-1"],
+                "external_evidence_ids": ["report-1"],
+                "unsupported_statements": [],
+                "question_only_fallbacks": [],
+            },
         },
     }
     evidence_path = tmp_path / "evidence.json"
@@ -109,10 +136,14 @@ def test_shipped_policy_evidence_example_passes(capsys) -> None:
     payload = json.loads(capsys.readouterr().out)
     assert payload["passed"] is True
     assert payload["implemented_checks"] == [
+        "bounded_expansion_tiering_required",
+        "dry_run_required",
         "exact_evidence_required",
+        "host_parity_required",
         "human_precision_threshold",
         "natural_reuse_requires_uncontrolled_selection",
         "negative_result_gate",
         "rollback_manifest_required",
         "runtime_identity_required",
+        "source_purity_required",
     ]

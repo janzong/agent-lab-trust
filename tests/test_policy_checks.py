@@ -18,6 +18,7 @@ def policy_payload():
 def full_evidence(root: Path) -> dict:
     (root / "rollback.json").write_text("{}", encoding="utf-8")
     (root / "manifest.json").write_text("{}", encoding="utf-8")
+    (root / "plan.json").write_text("{}", encoding="utf-8")
     return {
         "schema_version": 0,
         "checks": {
@@ -64,6 +65,32 @@ def full_evidence(root: Path) -> dict:
                 "requested_model": "deepseek-chat",
                 "served_model": "deepseek-chat",
                 "provider": "deepseek",
+            },
+            "dry_run_required": {
+                "production_write_attempted": False,
+                "plan_artifact": "plan.json",
+                "apply_flag": False,
+                "manifest_path": "manifest.json",
+                "dry_run_recorded": False,
+            },
+            "source_purity_required": {
+                "requested_source": "literature",
+                "returned_source": "literature",
+                "non_target_count": 0,
+                "fallback_source": None,
+            },
+            "host_parity_required": {
+                "table_counts": {"primary": {"nodes": 10}, "secondary": {"nodes": 10}},
+                "checksums": {"primary": "abc", "secondary": "abc"},
+                "user_data_counts": {"primary": {"users": 2}, "secondary": {"users": 2}},
+                "rollback_path": "rollback.json",
+            },
+            "bounded_expansion_tiering_required": {
+                "seed_context_id": "course-1",
+                "canonical_reference_ids": ["theory-1"],
+                "external_evidence_ids": ["report-1"],
+                "unsupported_statements": [],
+                "question_only_fallbacks": [],
             },
         },
     }
@@ -169,6 +196,54 @@ def test_runtime_identity_requires_matching_commit_and_rollback(tmp_path: Path) 
 
     assert result["passed"] is False
     assert check["reason"] == "target and actual commit differ"
+
+
+def test_dry_run_blocks_write_without_dry_run_record(tmp_path: Path) -> None:
+    evidence = full_evidence(tmp_path)
+    evidence["checks"]["dry_run_required"].update(
+        production_write_attempted=True,
+        apply_flag=True,
+        dry_run_recorded=False,
+    )
+
+    result = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    check = {item["id"]: item for item in result["results"]}["dry_run_required"]
+
+    assert result["passed"] is False
+    assert check["reason"] == "production write lacks dry-run record"
+
+
+def test_source_purity_rejects_cross_source_leakage(tmp_path: Path) -> None:
+    evidence = full_evidence(tmp_path)
+    evidence["checks"]["source_purity_required"]["non_target_count"] = 1
+
+    result = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    check = {item["id"]: item for item in result["results"]}["source_purity_required"]
+
+    assert result["passed"] is False
+    assert check["reason"] == "source view contains non-target objects"
+
+
+def test_host_parity_rejects_checksum_mismatch(tmp_path: Path) -> None:
+    evidence = full_evidence(tmp_path)
+    evidence["checks"]["host_parity_required"]["checksums"]["secondary"] = "def"
+
+    result = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    check = {item["id"]: item for item in result["results"]}["host_parity_required"]
+
+    assert result["passed"] is False
+    assert check["reason"] == "host parity mismatch"
+
+
+def test_bounded_expansion_requires_unsupported_items_as_questions(tmp_path: Path) -> None:
+    evidence = full_evidence(tmp_path)
+    evidence["checks"]["bounded_expansion_tiering_required"]["unsupported_statements"] = ["unsupported conclusion"]
+
+    result = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    check = {item["id"]: item for item in result["results"]}["bounded_expansion_tiering_required"]
+
+    assert result["passed"] is False
+    assert check["reason"] == "unsupported statements not converted to questions"
 
 
 def test_missing_evidence_is_fail_closed_and_hash_is_stable(tmp_path: Path) -> None:

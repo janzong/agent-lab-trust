@@ -44,6 +44,32 @@
       "requested_model": "deepseek-chat",
       "served_model": "deepseek-chat",
       "provider": "deepseek"
+    },
+    "dry_run_required": {
+      "production_write_attempted": false,
+      "plan_artifact": "plan.json",
+      "apply_flag": false,
+      "manifest_path": "manifest.json",
+      "dry_run_recorded": false
+    },
+    "source_purity_required": {
+      "requested_source": "literature",
+      "returned_source": "literature",
+      "non_target_count": 0,
+      "fallback_source": null
+    },
+    "host_parity_required": {
+      "table_counts": {"primary": {"nodes": 3940}, "secondary": {"nodes": 3940}},
+      "checksums": {"primary": "abc", "secondary": "abc"},
+      "user_data_counts": {"primary": {"users": 2}, "secondary": {"users": 2}},
+      "rollback_path": "rollback.json"
+    },
+    "bounded_expansion_tiering_required": {
+      "seed_context_id": "course-example",
+      "canonical_reference_ids": ["theory-example"],
+      "external_evidence_ids": ["report-example"],
+      "unsupported_statements": [],
+      "question_only_fallbacks": []
     }
   }
 }

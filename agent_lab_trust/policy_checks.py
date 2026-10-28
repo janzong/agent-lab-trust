@@ -15,11 +15,15 @@ class PolicyEvaluationError(ValueError):
 
 IMPLEMENTED_CHECKS = {
     "exact_evidence_required",
+    "dry_run_required",
     "negative_result_gate",
     "human_precision_threshold",
+    "source_purity_required",
+    "host_parity_required",
     "rollback_manifest_required",
     "natural_reuse_requires_uncontrolled_selection",
     "runtime_identity_required",
+    "bounded_expansion_tiering_required",
 }
 
 
@@ -269,6 +273,103 @@ def _evaluate_runtime_identity(check: Mapping[str, Any], evidence: Mapping[str, 
     }
 
 
+def _present(root: Path, relative: str) -> bool:
+    path = Path(relative)
+    resolved = path if path.is_absolute() else root / path
+    return resolved.is_file() and resolved.stat().st_size > 0
+
+
+def _evaluate_dry_run(check: Mapping[str, Any], evidence: Mapping[str, Any], root: Path) -> dict[str, Any]:
+    attempted = evidence.get("production_write_attempted")
+    applied = evidence.get("apply_flag")
+    recorded = evidence.get("dry_run_recorded")
+    for field, value in (
+        ("production_write_attempted", attempted),
+        ("apply_flag", applied),
+        ("dry_run_recorded", recorded),
+    ):
+        if not isinstance(value, bool):
+            raise PolicyEvaluationError(f"{field} must be a boolean")
+    plan = evidence.get("plan_artifact")
+    manifest = evidence.get("manifest_path")
+    if not isinstance(plan, str) or not plan or not isinstance(manifest, str) or not manifest:
+        raise PolicyEvaluationError("plan_artifact and manifest_path must be non-empty strings")
+    if not attempted:
+        return {"id": check["id"], "result": "pass", "reason": "no production write attempted"}
+    if not recorded or not applied:
+        return {"id": check["id"], "result": "fail", "reason": "production write lacks dry-run record"}
+    if not _present(root, plan):
+        return {"id": check["id"], "result": "fail", "reason": "dry-run plan missing or empty"}
+    if not _present(root, manifest):
+        return {"id": check["id"], "result": "fail", "reason": "manifest missing or empty"}
+    return {"id": check["id"], "result": "pass", "reason": "dry-run and manifest present"}
+
+
+def _evaluate_source_purity(check: Mapping[str, Any], evidence: Mapping[str, Any]) -> dict[str, Any]:
+    requested = evidence.get("requested_source")
+    returned = evidence.get("returned_source")
+    if not isinstance(requested, str) or not requested or not isinstance(returned, str) or not returned:
+        raise PolicyEvaluationError("requested_source and returned_source must be non-empty strings")
+    non_target = _require_int(evidence, "non_target_count")
+    fallback = evidence.get("fallback_source")
+    if fallback is not None and not isinstance(fallback, str):
+        raise PolicyEvaluationError("fallback_source must be a string or null")
+    if requested != returned:
+        result, reason = "fail", "requested and returned source differ"
+    elif non_target != 0:
+        result, reason = "fail", "source view contains non-target objects"
+    else:
+        result, reason = "pass", "source view isolated"
+    return {
+        "id": check["id"],
+        "result": result,
+        "reason": reason,
+        "requested_source": requested,
+        "returned_source": returned,
+        "non_target_count": non_target,
+        "fallback_source": fallback,
+    }
+
+
+def _evaluate_host_parity(check: Mapping[str, Any], evidence: Mapping[str, Any], root: Path) -> dict[str, Any]:
+    groupings = {}
+    for field in ("table_counts", "checksums", "user_data_counts"):
+        value = evidence.get(field)
+        if not isinstance(value, dict) or len(value) < 2:
+            raise PolicyEvaluationError(f"{field} must contain at least two hosts")
+        groupings[field] = value
+    rollback = evidence.get("rollback_path")
+    if not isinstance(rollback, str) or not rollback or not _present(root, rollback):
+        return {"id": check["id"], "result": "fail", "reason": "rollback file missing or empty"}
+    for field, values in groupings.items():
+        canonical = {_canonical(value) for value in values.values()}
+        if len(canonical) != 1:
+            return {"id": check["id"], "result": "fail", "reason": "host parity mismatch"}
+    return {"id": check["id"], "result": "pass", "reason": "host parity verified"}
+
+
+def _evaluate_bounded_expansion(check: Mapping[str, Any], evidence: Mapping[str, Any]) -> dict[str, Any]:
+    for field in ("seed_context_id",):
+        if not isinstance(evidence.get(field), str) or not evidence[field].strip():
+            raise PolicyEvaluationError(f"{field} must be a non-empty string")
+    for field in ("canonical_reference_ids", "external_evidence_ids", "unsupported_statements", "question_only_fallbacks"):
+        if not isinstance(evidence.get(field), list):
+            raise PolicyEvaluationError(f"{field} must be a list")
+    unsupported = set(map(str, evidence["unsupported_statements"]))
+    fallbacks = set(map(str, evidence["question_only_fallbacks"]))
+    if not unsupported <= fallbacks:
+        return {
+            "id": check["id"],
+            "result": "fail",
+            "reason": "unsupported statements not converted to questions",
+        }
+    return {
+        "id": check["id"],
+        "result": "pass",
+        "reason": "expansion tiers preserved",
+    }
+
+
 def evaluate_policy_evidence(
     policy: Mapping[str, Any],
     evidence: Mapping[str, Any],
@@ -298,16 +399,24 @@ def evaluate_policy_evidence(
             continue
         if check_id == "exact_evidence_required":
             result = _evaluate_exact_evidence(check, check_evidence)
+        elif check_id == "dry_run_required":
+            result = _evaluate_dry_run(check, check_evidence, root)
         elif check_id == "negative_result_gate":
             result = _evaluate_negative_result_gate(check, check_evidence)
         elif check_id == "human_precision_threshold":
             result = _evaluate_human_precision(check, check_evidence)
+        elif check_id == "source_purity_required":
+            result = _evaluate_source_purity(check, check_evidence)
+        elif check_id == "host_parity_required":
+            result = _evaluate_host_parity(check, check_evidence, root)
         elif check_id == "rollback_manifest_required":
             result = _evaluate_rollback_manifest(check, check_evidence, root)
         elif check_id == "natural_reuse_requires_uncontrolled_selection":
             result = _evaluate_natural_reuse(check, check_evidence)
-        else:
+        elif check_id == "runtime_identity_required":
             result = _evaluate_runtime_identity(check, check_evidence, root)
+        else:
+            result = _evaluate_bounded_expansion(check, check_evidence)
         results.append(result)
 
     unimplemented = sorted(set(checks) - IMPLEMENTED_CHECKS)

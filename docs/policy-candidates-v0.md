@@ -1,7 +1,7 @@
 # Agent Trust Policy Candidates v0
 
 `policy-candidates-v0.json` defines the next layer above the current method
-cards: named checks that an audit policy can express. Six inputs-first checks
+cards: named checks that an audit policy can express. All ten inputs-first checks
 are executable in v0; the remaining checks stay design-only.
 
 ## Candidate checks
@@ -9,15 +9,15 @@ are executable in v0; the remaining checks stay design-only.
 | Check | Executable v0 | Failure mode |
 |---|---|---|
 | `exact_evidence_required` | yes | fail closed if exact source/chunk evidence is absent |
-| `dry_run_required` | no | fail closed if a production mutation has no dry-run plan |
+| `dry_run_required` | yes | fail closed if a production mutation has no dry-run plan |
 | `negative_result_gate` | yes | block production writes when human precision misses 0.80 |
 | `human_precision_threshold` | yes | block semantic writes below 0.80 precision |
-| `source_purity_required` | no | fail closed when a requested source view is contaminated |
-| `host_parity_required` | no | fail closed when host counts/checksums differ |
+| `source_purity_required` | yes | fail closed when a requested source view is contaminated |
+| `host_parity_required` | yes | fail closed when host counts/checksums differ |
 | `rollback_manifest_required` | yes | fail closed when rollback/manifest artifacts are absent |
 | `natural_reuse_requires_uncontrolled_selection` | yes | fail closed when controlled reuse is claimed without natural selection and accepted material use |
 | `runtime_identity_required` | yes | fail closed when code, process, artifact, data, or model identity is absent |
-| `bounded_expansion_tiering_required` | no | fail closed when expansion beyond a seed lacks explicit evidence tiers |
+| `bounded_expansion_tiering_required` | yes | fail closed when expansion beyond a seed lacks explicit evidence tiers |
 
 ## Boundary
 

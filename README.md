@@ -56,7 +56,7 @@ Expected:
 
 | Check | Expected |
 |---|---|
-| tests | 41 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
+| tests | 45 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
@@ -111,16 +111,20 @@ bounded expansion tiering.
 ## Policy candidates
 
 [`policy-candidates-v0.json`](policy-candidates-v0.json) defines named checks,
-required inputs, thresholds, and fail-closed behavior. Six checks are
+required inputs, thresholds, and fail-closed behavior. Ten checks are
 executable in v0:
 
 ```text
 exact_evidence_required
+dry_run_required
 negative_result_gate
 human_precision_threshold
+source_purity_required
+host_parity_required
 rollback_manifest_required
 natural_reuse_requires_uncontrolled_selection
 runtime_identity_required
+bounded_expansion_tiering_required
 ```
 
 ```bash
@@ -129,8 +133,8 @@ agent-lab-trust policy-check examples/policy-evidence/evidence.json \
   --root examples/policy-evidence
 ```
 
-The remaining candidates stay design-only. See
-[`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md).
+All ten policy candidates are now executable under the input-first v0 semantics.
+See [`docs/policy-candidates-v0.md`](docs/policy-candidates-v0.md).
 
 ## Public case patterns
 
