@@ -29,6 +29,16 @@ def test_cli_policy_check_emits_canonical_evaluation(tmp_path: Path, capsys) -> 
     evidence = {
         "schema_version": 0,
         "checks": {
+            "exact_evidence_required": {
+                "asset_id": "asset-1",
+                "quote": "verified quote",
+                "source_sha": "a" * 64,
+                "chunk_id": "chunk-1",
+                "source_status": "published",
+                "quote_verified": True,
+                "offset_valid": True,
+                "chunk_current": True,
+            },
             "negative_result_gate": {
                 "candidate_count": 308,
                 "human_sample_count": 50,
@@ -50,6 +60,18 @@ def test_cli_policy_check_emits_canonical_evaluation(tmp_path: Path, capsys) -> 
                 "eligible_workflow_count": 97,
                 "natural_selection_rows": 0,
                 "accepted_material_use_rows": 0,
+            },
+            "runtime_identity_required": {
+                "target_commit": "abc123",
+                "actual_commit": "abc123",
+                "process_start_time": "2026-10-28T15:00:00+08:00",
+                "health_version": "0.4.18",
+                "artifact_hash": "b" * 64,
+                "table_counts": {"nodes": 3940},
+                "rollback_path": "rollback.json",
+                "requested_model": "deepseek-chat",
+                "served_model": "deepseek-chat",
+                "provider": "deepseek",
             },
         },
     }
@@ -87,8 +109,10 @@ def test_shipped_policy_evidence_example_passes(capsys) -> None:
     payload = json.loads(capsys.readouterr().out)
     assert payload["passed"] is True
     assert payload["implemented_checks"] == [
+        "exact_evidence_required",
         "human_precision_threshold",
         "natural_reuse_requires_uncontrolled_selection",
         "negative_result_gate",
         "rollback_manifest_required",
+        "runtime_identity_required",
     ]

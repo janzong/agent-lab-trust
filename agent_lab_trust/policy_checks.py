@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -13,10 +14,12 @@ class PolicyEvaluationError(ValueError):
 
 
 IMPLEMENTED_CHECKS = {
+    "exact_evidence_required",
     "negative_result_gate",
     "human_precision_threshold",
     "rollback_manifest_required",
     "natural_reuse_requires_uncontrolled_selection",
+    "runtime_identity_required",
 }
 
 
@@ -91,6 +94,36 @@ def _evaluate_negative_result_gate(check: Mapping[str, Any], evidence: Mapping[s
         "precision": precision,
         "threshold": threshold,
         "production_write_count": write_count,
+    }
+
+
+def _evaluate_exact_evidence(check: Mapping[str, Any], evidence: Mapping[str, Any]) -> dict[str, Any]:
+    required_text = ["asset_id", "quote", "chunk_id", "source_status"]
+    for field in required_text:
+        if not isinstance(evidence.get(field), str) or not evidence[field].strip():
+            raise PolicyEvaluationError(f"{field} must be a non-empty string")
+    source_sha = evidence.get("source_sha")
+    if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
+        raise PolicyEvaluationError("source_sha must be 64 lowercase hex characters")
+    flags = [
+        evidence.get("quote_verified"),
+        evidence.get("offset_valid"),
+        evidence.get("chunk_current"),
+    ]
+    if any(not isinstance(flag, bool) for flag in flags):
+        raise PolicyEvaluationError("evidence verification flags must be booleans")
+    published = evidence["source_status"] == "published"
+    verified = published and all(flags)
+    return {
+        "id": check["id"],
+        "result": "pass" if verified else "fail",
+        "reason": "exact evidence verified" if verified else "exact evidence not current or verified",
+        "asset_id": evidence["asset_id"],
+        "chunk_id": evidence["chunk_id"],
+        "source_status": evidence["source_status"],
+        "quote_verified": evidence["quote_verified"],
+        "offset_valid": evidence["offset_valid"],
+        "chunk_current": evidence["chunk_current"],
     }
 
 
@@ -187,6 +220,55 @@ def _evaluate_natural_reuse(check: Mapping[str, Any], evidence: Mapping[str, Any
     }
 
 
+def _evaluate_runtime_identity(check: Mapping[str, Any], evidence: Mapping[str, Any], root: Path) -> dict[str, Any]:
+    fields = [
+        "target_commit",
+        "actual_commit",
+        "process_start_time",
+        "health_version",
+        "artifact_hash",
+        "rollback_path",
+        "requested_model",
+        "served_model",
+        "provider",
+    ]
+    for field in fields:
+        if not isinstance(evidence.get(field), str) or not evidence[field].strip():
+            raise PolicyEvaluationError(f"{field} must be a non-empty string")
+    table_counts = evidence.get("table_counts")
+    if not isinstance(table_counts, dict) or not table_counts:
+        raise PolicyEvaluationError("table_counts must be a non-empty object")
+    rollback = Path(evidence["rollback_path"])
+    rollback_path = rollback if rollback.is_absolute() else root / rollback
+    if not rollback_path.is_file() or rollback_path.stat().st_size == 0:
+        return {
+            "id": check["id"],
+            "result": "fail",
+            "reason": "rollback file missing or empty",
+            "target_commit": evidence["target_commit"],
+            "actual_commit": evidence["actual_commit"],
+        }
+    if evidence["target_commit"] != evidence["actual_commit"]:
+        return {
+            "id": check["id"],
+            "result": "fail",
+            "reason": "target and actual commit differ",
+            "target_commit": evidence["target_commit"],
+            "actual_commit": evidence["actual_commit"],
+        }
+    return {
+        "id": check["id"],
+        "result": "pass",
+        "reason": "runtime identity verified",
+        "target_commit": evidence["target_commit"],
+        "actual_commit": evidence["actual_commit"],
+        "health_version": evidence["health_version"],
+        "requested_model": evidence["requested_model"],
+        "served_model": evidence["served_model"],
+        "provider": evidence["provider"],
+    }
+
+
 def evaluate_policy_evidence(
     policy: Mapping[str, Any],
     evidence: Mapping[str, Any],
@@ -214,14 +296,18 @@ def evaluate_policy_evidence(
                 "reason": "evidence missing",
             })
             continue
-        if check_id == "negative_result_gate":
+        if check_id == "exact_evidence_required":
+            result = _evaluate_exact_evidence(check, check_evidence)
+        elif check_id == "negative_result_gate":
             result = _evaluate_negative_result_gate(check, check_evidence)
         elif check_id == "human_precision_threshold":
             result = _evaluate_human_precision(check, check_evidence)
         elif check_id == "rollback_manifest_required":
             result = _evaluate_rollback_manifest(check, check_evidence, root)
-        else:
+        elif check_id == "natural_reuse_requires_uncontrolled_selection":
             result = _evaluate_natural_reuse(check, check_evidence)
+        else:
+            result = _evaluate_runtime_identity(check, check_evidence, root)
         results.append(result)
 
     unimplemented = sorted(set(checks) - IMPLEMENTED_CHECKS)

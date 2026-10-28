@@ -21,6 +21,16 @@ def full_evidence(root: Path) -> dict:
     return {
         "schema_version": 0,
         "checks": {
+            "exact_evidence_required": {
+                "asset_id": "asset-1",
+                "quote": "verified quote",
+                "source_sha": "a" * 64,
+                "chunk_id": "chunk-1",
+                "source_status": "published",
+                "quote_verified": True,
+                "offset_valid": True,
+                "chunk_current": True,
+            },
             "negative_result_gate": {
                 "candidate_count": 308,
                 "human_sample_count": 50,
@@ -42,6 +52,18 @@ def full_evidence(root: Path) -> dict:
                 "eligible_workflow_count": 97,
                 "natural_selection_rows": 0,
                 "accepted_material_use_rows": 0,
+            },
+            "runtime_identity_required": {
+                "target_commit": "abc123",
+                "actual_commit": "abc123",
+                "process_start_time": "2026-10-28T15:00:00+08:00",
+                "health_version": "0.4.18",
+                "artifact_hash": "b" * 64,
+                "table_counts": {"nodes": 3940},
+                "rollback_path": "rollback.json",
+                "requested_model": "deepseek-chat",
+                "served_model": "deepseek-chat",
+                "provider": "deepseek",
             },
         },
     }
@@ -125,6 +147,28 @@ def test_natural_reuse_gate_passes_without_claim_and_fails_with_unsupported_clai
         "natural_reuse_requires_uncontrolled_selection"
     ]
     assert natural["reason"] == "claimed reuse lacks natural selection or accepted material use"
+
+
+def test_exact_evidence_requires_current_verified_published_quote(tmp_path: Path) -> None:
+    evidence = full_evidence(tmp_path)
+    evidence["checks"]["exact_evidence_required"]["chunk_current"] = False
+
+    result = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    check = {item["id"]: item for item in result["results"]}["exact_evidence_required"]
+
+    assert result["passed"] is False
+    assert check["reason"] == "exact evidence not current or verified"
+
+
+def test_runtime_identity_requires_matching_commit_and_rollback(tmp_path: Path) -> None:
+    evidence = full_evidence(tmp_path)
+    evidence["checks"]["runtime_identity_required"]["actual_commit"] = "different"
+
+    result = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    check = {item["id"]: item for item in result["results"]}["runtime_identity_required"]
+
+    assert result["passed"] is False
+    assert check["reason"] == "target and actual commit differ"
 
 
 def test_missing_evidence_is_fail_closed_and_hash_is_stable(tmp_path: Path) -> None:

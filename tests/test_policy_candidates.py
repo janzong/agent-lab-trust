@@ -48,8 +48,10 @@ def test_executable_flags_match_evaluator_contract() -> None:
 
     assert implemented == IMPLEMENTED_CHECKS
     assert implemented == {
+        "exact_evidence_required",
         "negative_result_gate",
         "human_precision_threshold",
         "rollback_manifest_required",
         "natural_reuse_requires_uncontrolled_selection",
+        "runtime_identity_required",
     }

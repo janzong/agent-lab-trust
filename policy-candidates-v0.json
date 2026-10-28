@@ -8,8 +8,8 @@
       "method_card": "docs/method-cards-20261026.md#1-exact-evidence-chain",
       "policy_type": "required",
       "fail_closed": true,
-      "implemented": false,
-      "expected_inputs": ["asset_id", "quote", "source_sha", "chunk_id", "source_status"]
+      "implemented": true,
+      "expected_inputs": ["asset_id", "quote", "source_sha", "chunk_id", "source_status", "quote_verified", "offset_valid", "chunk_current"]
     },
     {
       "id": "dry_run_required",
@@ -90,10 +90,10 @@
     {
       "id": "runtime_identity_required",
       "title": "Runtime identity",
-      "method_card": "docs/method-cards-20261026.md#9-bounded-expansion-tiering",
+      "method_card": "docs/method-cards-20261026.md#8-runtime-identity",
       "policy_type": "required",
       "fail_closed": true,
-      "implemented": false,
+      "implemented": true,
       "expected_inputs": [
         "target_commit",
         "actual_commit",
