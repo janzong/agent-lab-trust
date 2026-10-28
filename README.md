@@ -56,7 +56,7 @@ Expected:
 
 | Check | Expected |
 |---|---|
-| tests | 37 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
+| tests | 38 passed under both `TZ=UTC` and `TZ=Asia/Shanghai` |
 | `validate` | `replay-sample` success true, `failure_code` `"ok"` |
 | `report` | runs 1, success 1, failure 0, `report_hash` `a841b192981fd7e7` |
 | `deletion-proof` | `clean: true`, `audit_hash` `4f0193abbd49a0f9` |
@@ -111,13 +111,14 @@ bounded expansion tiering.
 ## Policy candidates
 
 [`policy-candidates-v0.json`](policy-candidates-v0.json) defines named checks,
-required inputs, thresholds, and fail-closed behavior. Three checks are
+required inputs, thresholds, and fail-closed behavior. Four checks are
 executable in v0:
 
 ```text
 negative_result_gate
 human_precision_threshold
 rollback_manifest_required
+natural_reuse_requires_uncontrolled_selection
 ```
 
 ```bash

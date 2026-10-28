@@ -73,6 +73,7 @@
       "expected_inputs": [
         "cohort_cutoff",
         "controlled_project_exclusions",
+        "claimed_natural_reuse",
         "eligible_workflow_count",
         "natural_selection_rows",
         "accepted_material_use_rows"

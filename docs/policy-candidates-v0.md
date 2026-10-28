@@ -1,7 +1,7 @@
 # Agent Trust Policy Candidates v0
 
 `policy-candidates-v0.json` defines the next layer above the current method
-cards: named checks that an audit policy can express. Three inputs-first checks
+cards: named checks that an audit policy can express. Four inputs-first checks
 are executable in v0; the remaining checks stay design-only.
 
 ## Candidate checks

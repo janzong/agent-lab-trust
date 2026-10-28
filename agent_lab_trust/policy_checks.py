@@ -16,6 +16,7 @@ IMPLEMENTED_CHECKS = {
     "negative_result_gate",
     "human_precision_threshold",
     "rollback_manifest_required",
+    "natural_reuse_requires_uncontrolled_selection",
 }
 
 
@@ -152,6 +153,40 @@ def _evaluate_rollback_manifest(check: Mapping[str, Any], evidence: Mapping[str,
     }
 
 
+def _evaluate_natural_reuse(check: Mapping[str, Any], evidence: Mapping[str, Any]) -> dict[str, Any]:
+    claimed = evidence.get("claimed_natural_reuse")
+    if not isinstance(claimed, bool):
+        raise PolicyEvaluationError("claimed_natural_reuse must be a boolean")
+    cohort_cutoff = evidence.get("cohort_cutoff")
+    if not isinstance(cohort_cutoff, str) or not cohort_cutoff.strip():
+        raise PolicyEvaluationError("cohort_cutoff must be a non-empty string")
+    exclusions = evidence.get("controlled_project_exclusions")
+    if not isinstance(exclusions, list):
+        raise PolicyEvaluationError("controlled_project_exclusions must be a list")
+    eligible = _require_int(evidence, "eligible_workflow_count")
+    selection_rows = _require_int(evidence, "natural_selection_rows")
+    accepted_rows = _require_int(evidence, "accepted_material_use_rows")
+    if accepted_rows > selection_rows:
+        raise PolicyEvaluationError("accepted_material_use_rows cannot exceed natural_selection_rows")
+    if not claimed:
+        result, reason = "pass", "no natural-reuse claim"
+    elif eligible == 0 or selection_rows == 0 or accepted_rows == 0:
+        result, reason = "fail", "claimed reuse lacks natural selection or accepted material use"
+    else:
+        result, reason = "pass", "natural selection and accepted material use present"
+    return {
+        "id": check["id"],
+        "result": result,
+        "reason": reason,
+        "claimed_natural_reuse": claimed,
+        "cohort_cutoff": cohort_cutoff,
+        "controlled_project_exclusion_count": len(exclusions),
+        "eligible_workflow_count": eligible,
+        "natural_selection_rows": selection_rows,
+        "accepted_material_use_rows": accepted_rows,
+    }
+
+
 def evaluate_policy_evidence(
     policy: Mapping[str, Any],
     evidence: Mapping[str, Any],
@@ -183,8 +218,10 @@ def evaluate_policy_evidence(
             result = _evaluate_negative_result_gate(check, check_evidence)
         elif check_id == "human_precision_threshold":
             result = _evaluate_human_precision(check, check_evidence)
-        else:
+        elif check_id == "rollback_manifest_required":
             result = _evaluate_rollback_manifest(check, check_evidence, root)
+        else:
+            result = _evaluate_natural_reuse(check, check_evidence)
         results.append(result)
 
     unimplemented = sorted(set(checks) - IMPLEMENTED_CHECKS)

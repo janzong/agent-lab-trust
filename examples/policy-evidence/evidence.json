@@ -14,6 +14,14 @@
     "rollback_manifest_required": {
       "rollback_path": "rollback.json",
       "manifest_path": "manifest.json"
+    },
+    "natural_reuse_requires_uncontrolled_selection": {
+      "claimed_natural_reuse": false,
+      "cohort_cutoff": "2026-10-22 05:28:46",
+      "controlled_project_exclusions": ["controlled-example"],
+      "eligible_workflow_count": 97,
+      "natural_selection_rows": 0,
+      "accepted_material_use_rows": 0
     }
   }
 }

@@ -43,6 +43,14 @@ def test_cli_policy_check_emits_canonical_evaluation(tmp_path: Path, capsys) -> 
                 "rollback_path": "rollback.json",
                 "manifest_path": "manifest.json",
             },
+            "natural_reuse_requires_uncontrolled_selection": {
+                "claimed_natural_reuse": False,
+                "cohort_cutoff": "2026-10-22 05:28:46",
+                "controlled_project_exclusions": ["controlled-1"],
+                "eligible_workflow_count": 97,
+                "natural_selection_rows": 0,
+                "accepted_material_use_rows": 0,
+            },
         },
     }
     evidence_path = tmp_path / "evidence.json"
@@ -80,6 +88,7 @@ def test_shipped_policy_evidence_example_passes(capsys) -> None:
     assert payload["passed"] is True
     assert payload["implemented_checks"] == [
         "human_precision_threshold",
+        "natural_reuse_requires_uncontrolled_selection",
         "negative_result_gate",
         "rollback_manifest_required",
     ]

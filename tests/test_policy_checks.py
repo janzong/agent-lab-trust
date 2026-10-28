@@ -35,6 +35,14 @@ def full_evidence(root: Path) -> dict:
                 "rollback_path": "rollback.json",
                 "manifest_path": "manifest.json",
             },
+            "natural_reuse_requires_uncontrolled_selection": {
+                "claimed_natural_reuse": False,
+                "cohort_cutoff": "2026-10-22 05:28:46",
+                "controlled_project_exclusions": ["controlled-1"],
+                "eligible_workflow_count": 97,
+                "natural_selection_rows": 0,
+                "accepted_material_use_rows": 0,
+            },
         },
     }
 
@@ -97,6 +105,26 @@ def test_rollback_manifest_requires_non_empty_files(tmp_path: Path) -> None:
     assert failed["passed"] is False
     check = {item["id"]: item for item in failed["results"]}["rollback_manifest_required"]
     assert check["reason"] == "manifest file missing or empty"
+
+
+def test_natural_reuse_gate_passes_without_claim_and_fails_with_unsupported_claim(tmp_path: Path) -> None:
+    evidence = full_evidence(tmp_path)
+
+    no_claim = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    assert no_claim["passed"] is True
+    natural = {item["id"]: item for item in no_claim["results"]}[
+        "natural_reuse_requires_uncontrolled_selection"
+    ]
+    assert natural["result"] == "pass"
+    assert natural["reason"] == "no natural-reuse claim"
+
+    evidence["checks"]["natural_reuse_requires_uncontrolled_selection"]["claimed_natural_reuse"] = True
+    unsupported = evaluate_policy_evidence(policy_payload(), evidence, root=tmp_path)
+    assert unsupported["passed"] is False
+    natural = {item["id"]: item for item in unsupported["results"]}[
+        "natural_reuse_requires_uncontrolled_selection"
+    ]
+    assert natural["reason"] == "claimed reuse lacks natural selection or accepted material use"
 
 
 def test_missing_evidence_is_fail_closed_and_hash_is_stable(tmp_path: Path) -> None:
