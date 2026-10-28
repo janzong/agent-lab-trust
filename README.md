@@ -131,9 +131,11 @@ The remaining candidates stay design-only. See
 
 ## Public case patterns
 
-[`docs/cases/negative-result-gate.md`](docs/cases/negative-result-gate.md)
-generalizes the 308-candidate / 20%-precision / zero-production-write trial into
-a reusable governance pattern.
+The repository now includes three public case patterns:
+
+- [`negative-result-gate.md`](docs/cases/negative-result-gate.md) — 308 candidates, 20% precision, zero production writes;
+- [`exact-evidence-chain.md`](docs/cases/exact-evidence-chain.md) — exact quote, current chunk, published source;
+- [`controlled-adoption-is-not-asset-reproduction.md`](docs/cases/controlled-adoption-is-not-asset-reproduction.md) — controlled acceptance versus natural reuse.
 
 ## Theory essay
 
