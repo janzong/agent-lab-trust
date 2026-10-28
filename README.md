@@ -144,6 +144,7 @@ The repository now includes three public case patterns:
 - [`negative-result-gate.md`](docs/cases/negative-result-gate.md) — 308 candidates, 20% precision, zero production writes;
 - [`exact-evidence-chain.md`](docs/cases/exact-evidence-chain.md) — exact quote, current chunk, published source;
 - [`controlled-adoption-is-not-asset-reproduction.md`](docs/cases/controlled-adoption-is-not-asset-reproduction.md) — controlled acceptance versus natural reuse.
+- [`human-semantic-gate.md`](docs/cases/human-semantic-gate.md) — measured human review before semantic writes.
 
 ## Theory essay
 
