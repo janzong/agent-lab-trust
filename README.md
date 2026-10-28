@@ -161,7 +161,7 @@ v0.1.0 is published:
 <https://github.com/janzong/agent-lab-trust/releases/tag/v0.1.0>.
 
 Current main is preparing **v0.2.0-rc1** with the input-first policy evaluator.
-The candidate wheel has been built and inspected locally but is not published:
+The candidate wheel has passed a clean-environment installation and is not published:
 see [`docs/release/v0.2.0-rc1.md`](docs/release/v0.2.0-rc1.md).
 
 Current main requires Python 3.11 or newer. The pre-audit `v0.1.0-rc2`
